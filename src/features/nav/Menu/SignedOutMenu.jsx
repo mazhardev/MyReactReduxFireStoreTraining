@@ -1,16 +1,17 @@
 import React from 'react'
-import { Button } from 'semantic-ui-react'
+import { Button,Menu } from 'semantic-ui-react'
 
-const SignedOutMenu = () => {
+const SignedOutMenu = ({signIn}) => {
   return (
-      <div>
-    <Button basic inverted content="Login" />
+    <Menu.Item position="right">
+    <Button onClick={signIn} basic inverted content="Login" />
     <Button
     basic
     inverted
-    content="Sign Out"
+    content="Register"
     style={{ marginLeft: "0.5em" }}
-  /></div>
+  />
+  </Menu.Item>
   )
 }
 
