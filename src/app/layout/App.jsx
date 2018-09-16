@@ -8,14 +8,15 @@ import PeopleDashBoard from '../../features/user/PeopleDashboard/PeopleDashboard
 import UserDetails from '../../features/user/userDetails/UserDetails'
 import SettingsDashboard from '../../features/user/settings/SettingsDashboard'
 import EventForm from '../../features/event/eventForm/EventForm'
+import HomePage from '../../features/home/HomePage'
 class App extends Component {
   render() {
     return (
       <div>
         <NavBar />
         <Container className="main">
-        <Route path="/" component={EventDashboard} />
-        <Route path="/event" component={EventDashboard} />
+        <Route exact path="/" component={HomePage} />
+        <Route path="/events" component={EventDashboard} />
         <Route path="/event/:id" component={EventDetailedPage} />
         <Route path="/people" component={PeopleDashBoard} />
         <Route path="/profile/:id" component={UserDetails} />
