@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Menu, Container, Button } from "semantic-ui-react";
+import { NavLink,Link } from 'react-router-dom'
 class NavBar extends Component {
   render() {
     return (
@@ -9,7 +10,8 @@ class NavBar extends Component {
             <img src="assets/logo.png" alt="logo" />
             Re-vents
           </Menu.Item>
-          <Menu.Item name="Events" />
+          <Menu.Item as={NavLink} to="/events" name="Events" />
+          <Menu.Item as={NavLink} to="/people" name="People" />
           <Menu.Item>
             <Button floated="right" positive inverted content="Create Event" />
           </Menu.Item>

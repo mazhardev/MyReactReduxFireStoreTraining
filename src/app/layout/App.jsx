@@ -11,7 +11,7 @@ import EventForm from '../../features/event/eventForm/EventForm'
 class App extends Component {
   render() {
     return (
-      <div>hggh
+      <div>
         <NavBar />
         <Container className="main">
         <Route path="/" component={EventDashboard} />
