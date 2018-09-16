@@ -1,6 +1,6 @@
 import React from 'react'
 
-EventDetailedPage = () => {
+const EventDetailedPage = () => {
   return (
     <div>
       <h1>Event Details Page</h1>
