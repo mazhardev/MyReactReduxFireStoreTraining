@@ -16,7 +16,6 @@ class App extends Component {
         <Switch>
         <Route exact path="/" component={HomePage} />   
         </Switch>
-    
     <Route
     path="/(.+)"
     render={()=>(
@@ -35,7 +34,6 @@ class App extends Component {
       </div>
     )}
     />
-
       </div>      
     );
   }
