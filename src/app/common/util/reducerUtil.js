@@ -1,3 +1,4 @@
+
 export const createReducer = (initialState, fnMap) => {
   return (state = initialState, { type, payLoad }) => {
     const handler = fnMap[type];
