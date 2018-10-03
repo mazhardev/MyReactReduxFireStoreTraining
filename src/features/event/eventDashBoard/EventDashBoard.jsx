@@ -4,10 +4,17 @@ import EventList from "../eventList/EventList";
 import EventForm from "../eventForm/EventForm";
 import cuid from "cuid";
 import { connect } from "react-redux";
+import { deleteEvent,updateEvent,createEvent } from '../EventAction';
 
 const mapState = state => ({
   events: state.events
 });
+
+const actions={
+  createEvent,
+  updateEvent,
+  deleteEvent
+}
 
 class EventDashBoard extends Component {
   state = {
@@ -27,9 +34,8 @@ class EventDashBoard extends Component {
   handNewEvent = newEvent => {
     newEvent.id = cuid();
     newEvent.hostPhotoURL = "../assets/user.png";
-    const updatedEvent = [...this.state.events, newEvent];
+    this.props.createEvent(newEvent);
     this.setState({
-      events: updatedEvent,
       isOpen: false
     });
   };
@@ -40,29 +46,20 @@ class EventDashBoard extends Component {
     });
   };
   handleEventUpdate = updatedEvent => {
+    this.props.updateEvent(updatedEvent);
     this.setState({
-      events: this.state.events.map(event => {
-        if (event.id === updatedEvent.id) {
-          return Object.assign({}, updatedEvent);
-        } else {
-          return event;
-        }
-      }),
       isOpen: false,
       selectedEvent: null
     });
   };
   handleDeleteEvent = eventId => () => {
-    const updatedEvents = this.state.events.filter(e => e.id !== eventId);
-    this.setState({
-      events: updatedEvents
-    });
+   this.props.deleteEvent(eventId);
   };
-
   render() {
     return (
       <Grid>
         <Grid.Column width={10}>
+
           <EventList
             onEventOpen={this.handleOpenEvent}
             events={this.props.events}
@@ -89,4 +86,4 @@ class EventDashBoard extends Component {
     );
   }
 }
-export default connect(mapState)(EventDashBoard);
+export default connect(mapState,actions)(EventDashBoard);
