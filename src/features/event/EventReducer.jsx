@@ -55,7 +55,7 @@ const initialSate=[
 export const createEvent=( state, payload)=>{
     return[...state, Object.assign({}, payload.event)]
 } 
-export const updateevent=(state, payload)=>{
+export const updateEvent=(state, payload)=>{
 return[...state.filter(event=>event.id !==payload.event.id), Object.assign({}, payload.event) ]
 
 }
@@ -66,7 +66,7 @@ export const deleteEvent=(state , payload)=>{
 export default createReducer(initialSate, {
 [CREATE_EVENT]:createEvent,
 [DELETE_EVENT]:deleteEvent,
-[UPDATE_EVENT]:updateevent
+[UPDATE_EVENT]:updateEvent
 
 })
 
