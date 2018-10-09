@@ -1,32 +1,33 @@
 import React, { Component } from "react";
 import { Segment, Form, Button } from "semantic-ui-react";
-import { connect } from 'react-redux'
-import { createEvent, updateEvent } from '../EventAction'
-import  cuid  from 'cuid'
-const mapState=(state,ownProps)=>{
-  const eventId=ownProps.match.params.id;
-  let event={
+import { createEvent, updateEvent } from "../EventAction";
+import cuid from "cuid";
+import { connect } from "react-redux";
+import { reduxForm, Field } from "redux-form";
+
+const mapState = (state, ownProps) => {
+  const eventId = ownProps.match.params.id;
+  let event = {
     title: "",
     date: "",
     city: "",
     venue: "",
     hostedBy: ""
-  }
-  if(eventId && state.events.length >0){
-    event=state.events.filter(event=>event.id===eventId)[0]
+  };
+  if (eventId && state.events.length > 0) {
+    event = state.events.filter(event => event.id === eventId)[0];
   }
   return {
     event
-  }
-
-}
-const actions={
+  };
+};
+const actions = {
   createEvent,
   updateEvent
-}
+};
 class EventForm extends Component {
   state = {
-    event: Object.assign({},this.props.event) 
+    event: Object.assign({}, this.props.event)
   };
   onFormSubmit = evt => {
     evt.preventDefault();
@@ -34,13 +35,13 @@ class EventForm extends Component {
       this.props.updateEvent(this.state.event);
       this.props.history.goBack();
     } else {
-      const newEvent={
+      const newEvent = {
         ...this.state.event,
-        id:cuid(),
-        hostPhotoURL:"/assets/user.png"
-      }
+        id: cuid(),
+        hostPhotoURL: "/assets/user.png"
+      };
       this.props.createEvent(newEvent);
-      this.props.history.push('/events');
+      this.props.history.push("/events");
     }
   };
   onChangeInput = evt => {
@@ -50,21 +51,12 @@ class EventForm extends Component {
       event: newEvent
     });
   };
-  
+
   render() {
-  
     return (
       <Segment>
         <Form onSubmit={this.onFormSubmit}>
-          <Form.Field>
-            <label>Event Title</label>
-            <input
-              name="title"
-              onChange={this.onChangeInput}
-              value={this.state.event.title}
-              placeholder="Tittle"
-            />
-          </Form.Field>
+         <Field name='title' type='text' component='input' placeholder='Please enter Event a name' />
           <Form.Field>
             <label>Event Date</label>
             <input
@@ -113,4 +105,7 @@ class EventForm extends Component {
     );
   }
 }
-export default connect(mapState,actions)(EventForm);
+export default connect(
+  mapState,
+  actions
+)(reduxForm({ form: "eventForm" })(EventForm));
