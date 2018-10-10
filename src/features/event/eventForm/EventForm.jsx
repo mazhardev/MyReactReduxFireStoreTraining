@@ -6,6 +6,7 @@ import { connect } from "react-redux";
 import { reduxForm, Field } from "redux-form";
 import TextInput from "../../../app/common/form/TextInput";
 import TextArea from "../../../app/common/form/TextArea";
+import SelectInput from "../../../app/common/form/SelectInput";
 
 const mapState = (state, ownProps) => {
   const eventId = ownProps.match.params.id;
@@ -27,6 +28,14 @@ const actions = {
   createEvent,
   updateEvent
 };
+const category = [
+    {key: 'drinks', text: 'Drinks', value: 'drinks'},
+    {key: 'culture', text: 'Culture', value: 'culture'},
+    {key: 'film', text: 'Film', value: 'film'},
+    {key: 'food', text: 'Food', value: 'food'},
+    {key: 'music', text: 'Music', value: 'music'},
+    {key: 'travel', text: 'Travel', value: 'travel'},
+];
 class EventForm extends Component {
  
   onFormSubmit = evt => {
@@ -60,7 +69,8 @@ class EventForm extends Component {
               <Field
                 name="category"
                 type="text"
-                component={TextInput}
+                options={category}
+                component={SelectInput}
                 placeholder="What is your event about"
               />
               <Field
