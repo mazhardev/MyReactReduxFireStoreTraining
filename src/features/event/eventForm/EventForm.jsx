@@ -7,15 +7,21 @@ import { reduxForm, Field } from "redux-form";
 import TextInput from "../../../app/common/form/TextInput";
 import TextArea from "../../../app/common/form/TextArea";
 import SelectInput from "../../../app/common/form/SelectInput";
+import {
+  isRequired,
+  composeValidators,
+  combineValidators,
+  hasLengthGreaterThan
+} from "revalidate";
 
 const mapState = (state, ownProps) => {
   const eventId = ownProps.match.params.id;
-  let event = { };
+  let event = {};
   if (eventId && state.events.length > 0) {
     event = state.events.filter(event => event.id === eventId)[0];
   }
   return {
-    initialValues:event
+    initialValues: event
   };
 };
 const actions = {
@@ -23,32 +29,43 @@ const actions = {
   updateEvent
 };
 const category = [
-    {key: 'drinks', text: 'Drinks', value: 'drinks'},
-    {key: 'culture', text: 'Culture', value: 'culture'},
-    {key: 'film', text: 'Film', value: 'film'},
-    {key: 'food', text: 'Food', value: 'food'},
-    {key: 'music', text: 'Music', value: 'music'},
-    {key: 'travel', text: 'Travel', value: 'travel'},
+  { key: "drinks", text: "Drinks", value: "drinks" },
+  { key: "culture", text: "Culture", value: "culture" },
+  { key: "film", text: "Film", value: "film" },
+  { key: "food", text: "Food", value: "food" },
+  { key: "music", text: "Music", value: "music" },
+  { key: "travel", text: "Travel", value: "travel" }
 ];
+const validate = combineValidators({
+  title: isRequired({ message: "Title is required" }),
+  category: isRequired({ message: "Category is required" }),
+  description: composeValidators(
+    isRequired({ message: "Description is required" }),
+    hasLengthGreaterThan(4)({
+      message: "Description at least needs to be 5 characters"
+    })
+  )(),
+  city: isRequired({ message: "City" }),
+  vanue: isRequired({ message: "Vanue" })
+});
 class EventForm extends Component {
- 
   onFormSubmit = values => {
-   
-     if (this.props.initialValues.id) {
-       this.props.updateEvent(values);
-       this.props.history.goBack();
-     } else {
+    if (this.props.initialValues.id) {
+      this.props.updateEvent(values);
+      this.props.history.goBack();
+    } else {
       const newEvent = {
-         ...values,
-         id: cuid(),
-         hostPhotoURL: "/assets/user.png",
-         hostedBy:"Mazhar"
-       };
-       this.props.createEvent(newEvent);
-       this.props.history.push("/events");
+        ...values,
+        id: cuid(),
+        hostPhotoURL: "/assets/user.png",
+        hostedBy: "Mazhar"
+      };
+      this.props.createEvent(newEvent);
+      this.props.history.push("/events");
     }
   };
   render() {
+    const {invalid,submitting,pristine}=this.props;
     return (
       <Grid>
         <Grid.Column width={10}>
@@ -95,7 +112,7 @@ class EventForm extends Component {
                 placeholder="Event Date"
               />
 
-              <Button positive type="submit">
+              <Button positive type="submit"  disabled={invalid||submitting||pristine} >
                 Submit
               </Button>
               <Button onClick={this.props.history.goBack} type="button">
@@ -111,4 +128,8 @@ class EventForm extends Component {
 export default connect(
   mapState,
   actions
-)(reduxForm({ form: "EventForm" ,enableReinitialize:true })(EventForm));
+)(
+  reduxForm({ form: "EventForm", enableReinitialize: true, validate })(
+    EventForm
+  )
+);
