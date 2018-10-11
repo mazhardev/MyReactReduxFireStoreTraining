@@ -7,12 +7,14 @@ import { reduxForm, Field } from "redux-form";
 import TextInput from "../../../app/common/form/TextInput";
 import TextArea from "../../../app/common/form/TextArea";
 import SelectInput from "../../../app/common/form/SelectInput";
+import DateInput from "../../../app/common/form/DateInput";
 import {
   isRequired,
   composeValidators,
   combineValidators,
   hasLengthGreaterThan
 } from "revalidate";
+import moment from "moment";
 
 const mapState = (state, ownProps) => {
   const eventId = ownProps.match.params.id;
@@ -46,10 +48,12 @@ const validate = combineValidators({
     })
   )(),
   city: isRequired({ message: "City" }),
-  vanue: isRequired({ message: "Vanue" })
+  vanue: isRequired({ message: "Vanue" }),
+  date: isRequired({ message: "Date" })
 });
 class EventForm extends Component {
   onFormSubmit = values => {
+    values.date = moment(values.date).format();
     if (this.props.initialValues.id) {
       this.props.updateEvent(values);
       this.props.history.goBack();
@@ -65,7 +69,7 @@ class EventForm extends Component {
     }
   };
   render() {
-    const {invalid,submitting,pristine}=this.props;
+    const { invalid, submitting, pristine } = this.props;
     return (
       <Grid>
         <Grid.Column width={10}>
@@ -108,11 +112,18 @@ class EventForm extends Component {
               <Field
                 name="date"
                 type="text"
-                component={TextInput}
+                component={DateInput}
+                dateFormat="YYYY-MM-DD HH:mm"
+                timeFormat="HH:mm"
+                showTimeSelect
                 placeholder="Event Date"
               />
 
-              <Button positive type="submit"  disabled={invalid||submitting||pristine} >
+              <Button
+                positive
+                type="submit"
+                disabled={invalid || submitting || pristine}
+              >
                 Submit
               </Button>
               <Button onClick={this.props.history.goBack} type="button">
