@@ -16,6 +16,9 @@ import {
   hasLengthGreaterThan
 } from "revalidate";
 import moment from "moment";
+import { geocodeByAddress, getLatLng } from "react-places-autocomplete";
+/*global google*/
+import Script from "react-load-script";
 
 const mapState = (state, ownProps) => {
   const eventId = ownProps.match.params.id;
@@ -53,6 +56,24 @@ const validate = combineValidators({
   date: isRequired({ message: "Date" })
 });
 class EventForm extends Component {
+  state = {
+    cityLatLng: {},
+    vanueLatLng: {},
+    scriptLoaded: false
+  };
+  handleCitySelect = selectCity => {
+    geocodeByAddress(selectCity)
+      .then(results => getLatLng(results[0]))
+      .then(latLng => {
+        this.setState({
+          cityLatLng: latLng
+        });
+      })
+      .then(() => {
+        this.props.change("city", selectCity);
+      });
+  };
+
   onFormSubmit = values => {
     values.date = moment(values.date).format();
     if (this.props.initialValues.id) {
@@ -69,10 +90,16 @@ class EventForm extends Component {
       this.props.history.push("/events");
     }
   };
+  handleScriptLoaded = () => this.setState({ scriptLoaded: true });
+
   render() {
     const { invalid, submitting, pristine } = this.props;
     return (
       <Grid>
+        <Script
+          url="https://maps.googleapis.com/maps/api/js?key=AIzaSyAqe2Hx0D8PX6MdqaIXKQvxr_ysHwj-I04&libraries=places"
+          onLoad={this.handleScriptLoaded}
+        />
         <Grid.Column width={10}>
           <Segment>
             <Form onSubmit={this.props.handleSubmit(this.onFormSubmit)}>
@@ -102,16 +129,23 @@ class EventForm extends Component {
                 name="city"
                 type="text"
                 component={PlaceInput}
-                 options={{types:['(cities)']}}
+                options={{ types: ["(cities)"] }}
                 placeholder="Event city"
+                onSelect={this.handleCitySelect}
               />
-              <Field
-                name="vanue"
-                type="text"
-                component={PlaceInput}
-                options={{types:['establishment']}}
-                placeholder="Event Vanue"
-              />
+              {this.state.scriptLoaded && (
+                <Field
+                  name="vanue"
+                  type="text"
+                  component={PlaceInput}
+                  options={{
+                    location: new google.maps.LatLng(this.state.cityLatLng),
+                    radius: 1000,
+                    types: ["establishment"]
+                  }}
+                  placeholder="Event Vanue"
+                />
+              )}
               <Field
                 name="date"
                 type="text"
