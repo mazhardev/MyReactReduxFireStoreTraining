@@ -73,9 +73,22 @@ class EventForm extends Component {
         this.props.change("city", selectCity);
       });
   };
+  handleVanueSelect = selectVanue => {
+    geocodeByAddress(selectVanue)
+      .then(results => getLatLng(results[0]))
+      .then(latLng => {
+        this.setState({
+          vanueLatLng: latLng
+        });
+      })
+      .then(() => {
+        this.props.change("vanue", selectVanue);
+      });
+  };
 
   onFormSubmit = values => {
     values.date = moment(values.date).format();
+    values.vanueLatLng=this.state.vanueLatLng;
     if (this.props.initialValues.id) {
       this.props.updateEvent(values);
       this.props.history.goBack();
@@ -144,6 +157,7 @@ class EventForm extends Component {
                     types: ["establishment"]
                   }}
                   placeholder="Event Vanue"
+                  onSelect={this.handleVanueSelect}
                 />
               )}
               <Field
