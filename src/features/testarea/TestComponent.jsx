@@ -1,19 +1,20 @@
 import React, { Component } from 'react'
-import { Button,Icon } from 'semantic-ui-react'
+import { Button } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import { incrementCounter, decrementCounter } from './actions'
-//import  Script  from "react-load-script"
+import  Script  from "react-load-script"
 import PlacesAutocomplete, { geocodeByAddress, getLatLng } from 'react-places-autocomplete'
-import GoogleMapReact from 'google-map-react';
+import { openModal } from '../../features/modals/ModalActions'
 
 const mapState = (state) => ({
   data: state.test.data
 })
 const actions = {
   incrementCounter,
-  decrementCounter
+  decrementCounter,
+  openModal
 }
-const Marker=()=><Icon name="marker" size="big" color="red" />
+
 class TestComponent extends Component {
   static defaultProps = {
     center: {
@@ -42,36 +43,25 @@ onChange=(address)=>{this.setState({address})}
       value: this.state.address,
       onChange: this.onChange,
     }
-    const {incrementCounter, decrementCounter, data} = this.props;
+    const {incrementCounter, decrementCounter, data,openModal} = this.props;
     return (
       <div>
-       {/*  <Script
+       {  <Script
         url='https://maps.googleapis.com/maps/api/js?key=AIzaSyAqe2Hx0D8PX6MdqaIXKQvxr_ysHwj-I04&libraries=places'
         onLoad={this.handleScriptLoad}
-       /> */}
+       /> }
         <h1>Test Area</h1>
         <h3>The answer is: {data}</h3>
         <Button onClick={incrementCounter} color='green' content='Increment' />
         <Button onClick={decrementCounter} color='red' content='Decrement' />
+        <Button onClick={()=>openModal('TestModal',{data:43})} color='teal' content='Open Modal' />
         <br/><br/>
         <form onSubmit={this.handleFormSubmit}>
         {this.state.scriptLoaded &&  <PlacesAutocomplete inputProps={inputProps} /> }
        
         <button type="submit">Submit</button>
       </form>
-      <div style={{ height: '300px', width: '100%' }}>
-        <GoogleMapReact
-          bootstrapURLKeys={{ key:"AIzaSyAqe2Hx0D8PX6MdqaIXKQvxr_ysHwj-I04" }}
-          defaultCenter={this.props.center}
-          defaultZoom={this.props.zoom}
-        >
-          <Marker
-            lat={59.955413}
-            lng={30.337844}
-            text={'Kreyser Avrora'}
-          />
-        </GoogleMapReact>
-      </div>
+     
       </div>
     )
   }
