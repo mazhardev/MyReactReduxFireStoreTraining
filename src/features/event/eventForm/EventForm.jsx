@@ -52,13 +52,13 @@ const validate = combineValidators({
     })
   )(),
   city: isRequired({ message: "City" }),
-  vanue: isRequired({ message: "Vanue" }),
+  venue: isRequired({ message: "Venue" }),
   date: isRequired({ message: "Date" })
 });
 class EventForm extends Component {
   state = {
     cityLatLng: {},
-    vanueLatLng: {},
+    venueLatLng: {},
     scriptLoaded: false
   };
   handleCitySelect = selectCity => {
@@ -73,22 +73,22 @@ class EventForm extends Component {
         this.props.change("city", selectCity);
       });
   };
-  handleVanueSelect = selectVanue => {
-    geocodeByAddress(selectVanue)
+  handleVanueSelect = selectVenue => {
+    geocodeByAddress(selectVenue)
       .then(results => getLatLng(results[0]))
       .then(latLng => {
         this.setState({
-          vanueLatLng: latLng
+          venueLatLng: latLng
         });
       })
       .then(() => {
-        this.props.change("vanue", selectVanue);
+        this.props.change("venue", selectVenue);
       });
   };
 
   onFormSubmit = values => {
     values.date = moment(values.date).format();
-    values.vanueLatLng=this.state.vanueLatLng;
+    values.venueLatLng=this.state.venueLatLng;
     if (this.props.initialValues.id) {
       this.props.updateEvent(values);
       this.props.history.goBack();
@@ -148,7 +148,7 @@ class EventForm extends Component {
               />
               {this.state.scriptLoaded && (
                 <Field
-                  name="vanue"
+                  name="venue"
                   type="text"
                   component={PlaceInput}
                   options={{
@@ -156,7 +156,7 @@ class EventForm extends Component {
                     radius: 1000,
                     types: ["establishment"]
                   }}
-                  placeholder="Event Vanue"
+                  placeholder="Event Venue"
                   onSelect={this.handleVanueSelect}
                 />
               )}
