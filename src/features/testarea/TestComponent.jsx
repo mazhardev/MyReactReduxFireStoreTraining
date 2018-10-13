@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import { incrementCounter, decrementCounter } from './actions'
 import  Script  from "react-load-script"
 import PlacesAutocomplete, { geocodeByAddress, getLatLng } from 'react-places-autocomplete'
-import { openModal } from '../../features/modals/ModalActions'
+import { openModal } from '../modals/modalActions'
 
 const mapState = (state) => ({
   data: state.test.data
