@@ -8,7 +8,7 @@ export const login=(creds)=>{
         }
     }
 }
-export const signout=()=>{
+export const logout=()=>{
     return{
         type:SIGN_OUT_USER
     }
