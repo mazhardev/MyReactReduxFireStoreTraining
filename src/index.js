@@ -8,8 +8,11 @@ import registerServiceWorker from "./registerServiceWorker";
 import { Provider } from 'react-redux'
 import { configureStore } from './app/store/configureStore'
 import ScrollToTop from './app/common/util/ScrollToTop'
+import { loadEvents } from './features/event/EventAction'
 
 const store=configureStore();
+store.dispatch(loadEvents())
+
 ReactDOM.render(
   <Provider store={store}>
   <BrowserRouter>

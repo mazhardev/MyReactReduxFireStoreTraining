@@ -3,13 +3,14 @@ import { Grid } from "semantic-ui-react";
 import EventList from "../eventList/EventList";
 import { connect } from "react-redux";
 import { deleteEvent } from '../EventAction';
+import LoadingComponent from '../../../app/layout/LoadingComponent'
 
 const mapState = state => ({
-  events: state.events
+  events: state.events,
+  loading:state.async.loading
 });
 
 const actions={
- 
   deleteEvent
 }
 
@@ -19,10 +20,11 @@ class EventDashBoard extends Component {
    this.props.deleteEvent(eventId);
   };
   render() {
+    const {loading}=this.props;
+    if(loading) return <LoadingComponent inverted={true}/>
     return (
       <Grid>
         <Grid.Column width={10}>
-
           <EventList
              events={this.props.events}
             onEventDelete={this.handleDeleteEvent}
