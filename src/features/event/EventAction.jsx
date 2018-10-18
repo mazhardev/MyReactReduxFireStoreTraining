@@ -1,14 +1,5 @@
-import {
-  CREATE_EVENT,
-  DELETE_EVENT,
-  UPDATE_EVENT,
-  FETCH_EVENTS
-} from "./EventConstant";
-import {
- asyncActionStart,
- asyncActionFinish,
- asyncActionError
-} from "../async/asyncActions";
+import {CREATE_EVENT,DELETE_EVENT,UPDATE_EVENT,FETCH_EVENTS} from "./EventConstant";
+import {asyncActionStart,asyncActionFinish,asyncActionError} from "../async/asyncActions";
 import { fetchSampleData } from "../../app/data/mockApi";
 
 export const fetchEvents = events => {
