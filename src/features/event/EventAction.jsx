@@ -1,7 +1,16 @@
-import {CREATE_EVENT,DELETE_EVENT,UPDATE_EVENT,FETCH_EVENTS} from "./EventConstant";
-import {asyncActionStart,asyncActionFinish,asyncActionError} from "../async/asyncActions";
+import {
+  CREATE_EVENT,
+  DELETE_EVENT,
+  UPDATE_EVENT,
+  FETCH_EVENTS
+} from "./EventConstant";
+import {
+  asyncActionStart,
+  asyncActionFinish,
+  asyncActionError
+} from "../async/asyncActions";
 import { fetchSampleData } from "../../app/data/mockApi";
-
+import { toastr } from "react-redux-toastr"
 export const fetchEvents = events => {
   return {
     type: FETCH_EVENTS,
@@ -9,22 +18,43 @@ export const fetchEvents = events => {
   };
 };
 export const createEvent = event => {
-  return {
-    type: CREATE_EVENT,
-    payload: { event }
+  return async dispatch => {
+    try {
+      dispatch({
+        type: CREATE_EVENT,
+        payload: { event }
+      });
+      toastr.success("Success!","Event has been created")
+    } catch (error) {
+      toastr.success("Oops","Something went wrong")
+    }
   };
 };
 
 export const deleteEvent = eventid => {
-  return {
-    type: DELETE_EVENT,
-    payload: { eventid }
+  return async dispatch => {
+    try {
+      dispatch({
+        type: DELETE_EVENT,
+        payload: { eventid }
+      });
+      toastr.success("Success!","Event has been Deleted")
+    } catch (error) {
+      toastr.success("Oops","Something went wrong")
+    }
   };
 };
 export const updateEvent = event => {
-  return {
-    type: UPDATE_EVENT,
-    payload: { event }
+  return async dispatch => {
+    try {
+      dispatch({
+        type: UPDATE_EVENT,
+        payload: { event }
+      });
+      toastr.success("Success!","Event has been updated")
+    } catch (error) {
+      toastr.success("Oops","Something went wrong")
+    }
   };
 };
 export const loadEvents = () => {
