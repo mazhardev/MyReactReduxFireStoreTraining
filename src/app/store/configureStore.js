@@ -9,7 +9,7 @@ import firebase from '../config/firbase'
 const rrfConfig={
 userProfile:'users',
 attachAuthIsReady:true,
-userFirestoreForProfile:true
+useFirestoreForProfile:true
 }
 export const configureStore = (preloadedState) => {
   const middlewares = [thunk.withExtraArgument({getFirebase,getFirestore})];
