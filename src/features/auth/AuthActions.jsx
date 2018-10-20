@@ -1,4 +1,3 @@
-import { SIGN_OUT_USER } from "./AuthConstants";
 import { closeModal } from "../modals/modalActions";
 import { SubmissionError } from "redux-form";
 
@@ -19,11 +18,7 @@ export const login = creds => {
   };
 };
 
-export const logout = () => {
-  return {
-    type: SIGN_OUT_USER
-  };
-};
+
 export const registerUser = user => async (
   dispatch,
   getState,
@@ -55,3 +50,18 @@ export const registerUser = user => async (
     });
   }
 };
+export const socialLogin = selectedProvider =>
+   async (dispatch, getState, { getFirebase }) => {
+    const firebase = getFirebase();
+    try {
+      dispatch(closeModal());
+      await firebase.login({
+        provider: selectedProvider,
+        type: 'popup'
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+

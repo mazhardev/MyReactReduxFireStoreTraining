@@ -5,12 +5,10 @@ import SignedOutMenu from "../Menu/SignedOutMenu";
 import SignedInMenu from "../Menu/SignedInMenu";
 import { connect } from "react-redux"
 import { openModal } from '../../modals/modalActions'
-import { logout } from '../../auth/AuthActions'
 import { withFirebase } from "react-redux-firebase";
 
 const actions={
-  openModal,
-  logout
+  openModal
 }
 const mapState=(state)=>({
    auth:state.firebase.auth
