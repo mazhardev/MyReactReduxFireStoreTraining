@@ -13,19 +13,33 @@ import ReduxToastr from "react-redux-toastr"
 
 const store=configureStore();
 
-ReactDOM.render(
-  <Provider store={store}>
-  <BrowserRouter>
-  <ScrollToTop>
-    <ReduxToastr 
-    position="bottom-right"
-    transitionIn="fadeIn"
-    transitionOut="fadeOut"
-    />
-  <App />
-  </ScrollToTop>
-  </BrowserRouter>
-  </Provider>,
-  document.getElementById("root")
-);
-registerServiceWorker();
+const rootEl = document.getElementById('root');
+
+let render = () => {
+  ReactDOM.render(
+    <Provider store={store}>
+      <BrowserRouter>
+        <ScrollToTop>
+          <ReduxToastr
+            position='bottom-right'
+            transitionIn='fadeIn'
+            transitionOut='fadeOut'
+          />
+          <App />
+        </ScrollToTop>
+      </BrowserRouter>
+    </Provider>,
+    rootEl
+  );
+};
+
+if (module.hot) {
+  module.hot.accept('./app/layout/App', () => {
+    setTimeout(render);
+  });
+}
+
+store.firebaseAuthIsReady.then(() => {
+  render();
+  registerServiceWorker();
+})
