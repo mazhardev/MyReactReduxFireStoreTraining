@@ -6,8 +6,13 @@ import BasicPage from './BasicPage'
 import AboutPage from './AboutPage'
 import PhotosPage from './PhotosPage'
 import AccountPage from './AccountPage'
+import { updatePassword } from "../../auth/AuthActions"
+import { connect } from "react-redux"
 
-const SettingsDashboard = () => {
+const actions={
+  updatePassword
+}
+const SettingsDashboard = ({updatePassword}) => {
   return (
     <Grid>
       <Grid.Column width={12}>
@@ -16,7 +21,7 @@ const SettingsDashboard = () => {
       <Route path='/settings/BasicPage' component={BasicPage}/>
       <Route path='/settings/AboutPage' component={AboutPage}/>
       <Route path='/settings/PhotosPage' component={PhotosPage}/>
-      <Route path='/settings/AccountPage' component={AccountPage}/>
+      <Route path='/settings/AccountPage' render={()=> <AccountPage updatePassword={updatePassword}/>}/>
       </Switch>
       </Grid.Column>
       <Grid.Column width={4}>
@@ -27,4 +32,4 @@ const SettingsDashboard = () => {
   )
 }
 
-export default SettingsDashboard
+export default connect(null,actions)(SettingsDashboard)
