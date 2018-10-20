@@ -62,8 +62,8 @@ export const socialLogin = selectedProvider => async (
       provider: selectedProvider,
       type: "popup"
     });
-    if (user.additionalUserInfo.newUser) {
-      await getFirestore.set(`users/${user.user.uid}`, {
+    if (user.additionalUserInfo.isNewUser) {
+      await firestore.set(`users/${user.user.uid}`, {
         displayName: user.profile.displayName,
         photoURL: user.profile.avatarUrl,
         createdAt: firestore.FieldValue.serverTimestamp()
