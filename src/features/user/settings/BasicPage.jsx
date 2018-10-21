@@ -1,19 +1,19 @@
-import React, { Component } from "react";
-import { Segment, Form, Header, Divider, Button } from "semantic-ui-react";
-import { Field, reduxForm } from "redux-form";
-import DateInput from "../../../app/common/form/DateInput";
-import PlacesInput from "../../../app/common/form/PlacesInput";
-import TextInput from "../../../app/common/form/TextInput";
-import RadioInput from "../../../app/common/form/RadioInput";
-import moment from "moment";
+import React, { Component } from 'react';
+import { Segment, Form, Header, Divider, Button } from 'semantic-ui-react';
+import { Field, reduxForm } from 'redux-form';
+import moment from 'moment';
+import DateInput from '../../../app/common/form/DateInput';
+import PlacesInput from '../../../app/common/form/PlacesInput';
+import TextInput from '../../../app/common/form/TextInput';
+import RadioInput from '../../../app/common/form/RadioInput';
 
 class BasicPage extends Component {
   render() {
-    const { pristine, submitting } = this.props;
+    const { pristine, submitting, handleSubmit, updateProfile } = this.props;
     return (
       <Segment>
         <Header dividing size="large" content="Basics" />
-        <Form>
+        <Form onSubmit={handleSubmit(updateProfile)}>
           <Field
             width={8}
             name="displayName"
@@ -22,7 +22,7 @@ class BasicPage extends Component {
             placeholder="Known As"
           />
           <Form.Group inline>
-            <label>Gender</label>
+            <label>Gender: </label>
             <Field
               name="gender"
               type="radio"
@@ -42,17 +42,17 @@ class BasicPage extends Component {
             width={8}
             name="dateOfBirth"
             component={DateInput}
-            placeholder="Date of Birth"
-            dateFormat="YYYY-MM-DD"
+            dateFormat='YYYY-MM-DD'
             showYearDropdown={true}
             showMonthDropdown={true}
-            dropdownMode="select"
-            maxDate={moment().subtract(18, "years")}
+            dropdownMode='select'
+            maxDate={moment().subtract(18, 'years')}
+            placeholder="Date of Birth"
           />
           <Field
             name="city"
             placeholder="Home Town"
-            options={{ types: ["(cities)"] }}
+            options={{ types: ['(cities)'] }}
             label="Female"
             component={PlacesInput}
             width={8}
@@ -70,6 +70,6 @@ class BasicPage extends Component {
   }
 }
 
-export default reduxForm({ form: "userProfile", enableReinitialize: true })(
+export default reduxForm({ form: 'userProfile', enableReinitialize: true, destroyOnUnmount: false })(
   BasicPage
 );
