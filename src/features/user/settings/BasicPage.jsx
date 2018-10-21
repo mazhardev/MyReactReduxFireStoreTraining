@@ -1,11 +1,11 @@
-import React, { Component } from 'react';
-import { Segment, Form, Header, Divider, Button } from 'semantic-ui-react';
-import { Field, reduxForm } from 'redux-form';
-import moment from 'moment';
-import DateInput from '../../../app/common/form/DateInput';
-import PlacesInput from '../../../app/common/form/PlacesInput';
-import TextInput from '../../../app/common/form/TextInput';
-import RadioInput from '../../../app/common/form/RadioInput';
+import React, { Component } from "react";
+import { Segment, Form, Header, Divider, Button } from "semantic-ui-react";
+import { Field, reduxForm } from "redux-form";
+import moment from "moment";
+import DateInput from "../../../app/common/form/DateInput";
+import PlacesInput from "../../../app/common/form/PlacesInput";
+import TextInput from "../../../app/common/form/TextInput";
+import RadioInput from "../../../app/common/form/RadioInput";
 
 class BasicPage extends Component {
   render() {
@@ -42,17 +42,17 @@ class BasicPage extends Component {
             width={8}
             name="dateOfBirth"
             component={DateInput}
-            dateFormat='YYYY-MM-DD'
+            dateFormat="YYYY-MM-DD"
             showYearDropdown={true}
             showMonthDropdown={true}
-            dropdownMode='select'
-            maxDate={moment().subtract(18, 'years')}
+            dropdownMode="select"
+            maxDate={moment().subtract(18, "years")}
             placeholder="Date of Birth"
           />
           <Field
             name="city"
             placeholder="Home Town"
-            options={{ types: ['(cities)'] }}
+            options={{ types: ["(cities)"] }}
             label="Female"
             component={PlacesInput}
             width={8}
@@ -70,6 +70,8 @@ class BasicPage extends Component {
   }
 }
 
-export default reduxForm({ form: 'userProfile', enableReinitialize: true, destroyOnUnmount: false })(
-  BasicPage
-);
+export default reduxForm({
+  form: "userProfile",
+  enableReinitialize: true,
+  destroyOnUnmount: false
+})(BasicPage);
