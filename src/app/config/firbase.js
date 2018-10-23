@@ -5,7 +5,7 @@ const firebaseconfig = {
   authDomain: "just-duality-219119.firebaseapp.com",
   databaseURL: "https://just-duality-219119.firebaseio.com",
   projectId: "just-duality-219119",
-  storageBucket: "",
+  storageBucket: "just-duality-219119.appspot.com",
   messagingSenderId: "621927613306"
 };
 firebase.initializeApp(firebaseconfig);
