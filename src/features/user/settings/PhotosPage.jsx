@@ -13,6 +13,13 @@ import Dropzone from "react-dropzone";
 import { connect } from "react-redux";
 import Cropper from "react-cropper";
 import "cropperjs/dist/cropper.css";
+import { uploadProfileImage } from "../userActions";
+import { toastr } from "react-redux-toastr";
+
+const actions = {
+  uploadProfileImage
+};
+
 class PhotosPage extends Component {
   state = {
     files: [],
@@ -40,6 +47,24 @@ class PhotosPage extends Component {
     }, "image/jpeg");
   };
 
+  uploadImage = async () => {
+    try {
+      await this.props.uploadProfileImage(
+        this.state.image,
+        this.state.fileName
+      );
+      this.cancelCrop();
+      toastr.success("Success!", "Photo has been uploaded");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  cancelCrop = () => {
+    this.setState({
+      files: [],
+      image: {}
+    });
+  };
   render() {
     return (
       <Segment>
@@ -78,10 +103,25 @@ class PhotosPage extends Component {
           <Grid.Column width={4}>
             <Header sub color="teal" content="Step 3 - Preview and Upload" />
             {this.state.files[0] && (
-              <Image
-                style={{ minHeight: "200px", minWidth: "200px" }}
-                src={this.state.cropResult}
-              />
+              <div>
+                <Image
+                  style={{ minHeight: "200px", minWidth: "200px" }}
+                  src={this.state.cropResult}
+                />
+                <Button.Group>
+                  <Button
+                    onClick={this.uploadImage}
+                    style={{ width: "100px" }}
+                    positive
+                    icon="check"
+                  />
+                  <Button
+                    onClick={this.cancelCrop}
+                    style={{ width: "100px" }}
+                    icon="close"
+                  />
+                </Button.Group>
+              </div>
             )}
           </Grid.Column>
         </Grid>
@@ -112,5 +152,5 @@ class PhotosPage extends Component {
 
 export default connect(
   null,
-  null
+  actions
 )(PhotosPage);
