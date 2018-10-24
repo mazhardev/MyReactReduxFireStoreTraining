@@ -67,8 +67,7 @@ export const uploadProfileImage = (file, fileName) => async (
     throw new Error("Problem uploading image");
   }
 };
-export const deletePhoto =( photo )=> 
-async (
+export const deletePhoto = photo => async (
   dispatch,
   getState,
   { getFirebase, getFirestore }
@@ -86,5 +85,20 @@ async (
   } catch (error) {
     console.log(error);
     throw new Error("Problem deleting the photo");
+  }
+};
+
+export const setMainPhoto = photo => async (
+  dispatch,
+  setState,
+  { getFirebase, getFirestore }
+) => {
+  const firebase = getFirebase();
+  try {
+    await firebase.updateProfile({
+      photoURL: photo.url
+    });
+  } catch (error) {
+    throw new Error("Problem stting main page");
   }
 };

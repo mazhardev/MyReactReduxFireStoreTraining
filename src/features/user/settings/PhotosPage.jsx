@@ -13,7 +13,7 @@ import Dropzone from "react-dropzone";
 import { connect } from "react-redux";
 import Cropper from "react-cropper";
 import "cropperjs/dist/cropper.css";
-import { uploadProfileImage, deletePhoto } from "../userActions";
+import { uploadProfileImage, deletePhoto, setMainPhoto } from "../userActions";
 import { toastr } from "react-redux-toastr";
 import { firestoreConnect } from "react-redux-firebase";
 import { compose } from "redux";
@@ -26,7 +26,8 @@ const mapState = state => ({
 
 const actions = {
   uploadProfileImage,
-  deletePhoto
+  deletePhoto,
+  setMainPhoto
 };
 const query = ({ auth }) => {
   return [
@@ -84,9 +85,16 @@ class PhotosPage extends Component {
       image: {}
     });
   };
-  handlePhotoDelete = photo => () => {
+  handlePhotoDelete = photo => async () => {
     try {
       this.props.deletePhoto(photo);
+    } catch (error) {
+      toastr.error("Oops!", error.message);
+    }
+  };
+  handleSetMainPhoto = photo => async () => {
+    try {
+      this.props.setMainPhoto(photo);
     } catch (error) {
       toastr.error("Oops!", error.message);
     }
@@ -172,10 +180,19 @@ class PhotosPage extends Component {
               <Card key={photo.id}>
                 <Image src={photo.url} />
                 <div className="ui two buttons">
-                  <Button basic color="green">
+                  <Button
+                    onClick={this.handleSetMainPhoto(photo)}
+                    basic
+                    color="green"
+                  >
                     Main
                   </Button>
-                  <Button onClick={this.handlePhotoDelete(photo)} basic icon="trash" color="red" />
+                  <Button
+                    onClick={this.handlePhotoDelete(photo)}
+                    basic
+                    icon="trash"
+                    color="red"
+                  />
                 </div>
               </Card>
             ))}
