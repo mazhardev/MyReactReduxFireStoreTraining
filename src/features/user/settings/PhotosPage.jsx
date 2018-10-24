@@ -13,7 +13,7 @@ import Dropzone from "react-dropzone";
 import { connect } from "react-redux";
 import Cropper from "react-cropper";
 import "cropperjs/dist/cropper.css";
-import { uploadProfileImage } from "../userActions";
+import { uploadProfileImage, deletePhoto } from "../userActions";
 import { toastr } from "react-redux-toastr";
 import { firestoreConnect } from "react-redux-firebase";
 import { compose } from "redux";
@@ -24,6 +24,10 @@ const mapState = state => ({
   photos: state.firestore.ordered.photos
 });
 
+const actions = {
+  uploadProfileImage,
+  deletePhoto
+};
 const query = ({ auth }) => {
   return [
     {
@@ -33,9 +37,6 @@ const query = ({ auth }) => {
       storeAs: "photos"
     }
   ];
-};
-const actions = {
-  uploadProfileImage
 };
 
 class PhotosPage extends Component {
@@ -82,6 +83,13 @@ class PhotosPage extends Component {
       files: [],
       image: {}
     });
+  };
+  handlePhotoDelete = photo => () => {
+    try {
+      this.props.deletePhoto(photo);
+    } catch (error) {
+      toastr.error("Oops!", error.message);
+    }
   };
   render() {
     const { photos, profile } = this.props;
@@ -167,7 +175,7 @@ class PhotosPage extends Component {
                   <Button basic color="green">
                     Main
                   </Button>
-                  <Button basic icon="trash" color="red" />
+                  <Button onClick={this.handlePhotoDelete(photo)} basic icon="trash" color="red" />
                 </div>
               </Card>
             ))}
