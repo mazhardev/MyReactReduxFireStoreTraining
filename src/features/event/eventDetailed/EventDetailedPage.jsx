@@ -7,8 +7,8 @@ import { Grid } from "semantic-ui-react";
 import { connect } from "react-redux";
 import { withFirestore } from "react-redux-firebase";
 import { toastr } from "react-redux-toastr";
-const mapState = (state) => {
- 
+import { objectToArray } from "../../../app/common/util/helpers";
+const mapState = state => {
   let event = {};
   if (state.firestore.ordered.events && state.firestore.ordered.events[0]) {
     event = state.firestore.ordered.events[0];
@@ -17,7 +17,7 @@ const mapState = (state) => {
 };
 class EventDetailedPage extends Component {
   async componentDidMount() {
-    const { firestore, match,history } = this.props;
+    const { firestore, match, history } = this.props;
     let event = await firestore.get(`events/${match.params.id}`);
     if (!event.exists) {
       history.push("/events");
@@ -27,6 +27,8 @@ class EventDetailedPage extends Component {
 
   render() {
     const { event } = this.props;
+    const attendees =
+      event && event.attendees && objectToArray(event.attendees);
     return (
       <Grid>
         <Grid.Column width={10}>
@@ -35,7 +37,7 @@ class EventDetailedPage extends Component {
           <EventDetailedChat />
         </Grid.Column>
         <Grid.Column width={6}>
-          <EventDetailedSidebar attendees={event.attendees} />
+          <EventDetailedSidebar attendees={attendees} />
         </Grid.Column>
       </Grid>
     );
