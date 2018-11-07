@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Segment, Form, Button, Grid, Header } from "semantic-ui-react";
-import { createEvent, updateEvent } from "../EventAction";
+import { createEvent, updateEvent, cancelToggle } from "../EventAction";
 import { connect } from "react-redux";
 import { reduxForm, Field } from "redux-form";
 import TextInput from "../../../app/common/form/TextInput";
@@ -25,12 +25,14 @@ const mapState = state => {
     event = state.firestore.ordered.events[0];
   }
   return {
-    initialValues: event
+    initialValues: event,
+    event
   };
 };
 const actions = {
   createEvent,
-  updateEvent
+  updateEvent,
+  cancelToggle
 };
 const category = [
   { key: "drinks", text: "Drinks", value: "drinks" },
@@ -100,13 +102,13 @@ class EventForm extends Component {
     const { firestore, match } = this.props;
     let event = await firestore.get(`events/${match.params.id}`);
     if (event.exists) {
-    this.setState({
-      venueLatLng:event.data().venueLatLng
-    })
+      this.setState({
+        venueLatLng: event.data().venueLatLng
+      });
     }
   }
   render() {
-    const { invalid, submitting, pristine } = this.props;
+    const { invalid, submitting, pristine, event, cancelToggle } = this.props;
     return (
       <Grid>
         <Script
@@ -180,6 +182,13 @@ class EventForm extends Component {
               <Button onClick={this.props.history.goBack} type="button">
                 Cancel
               </Button>
+              <Button
+                onClick={() => cancelToggle(!event.cancelled, event.id)}
+                type="button"
+                color={event.cancelled ? "green" : "red"}
+                content={event.cancelled ? "Reactivate event" : "Cancel event"}
+                floated="right"
+              />
             </Form>
           </Segment>
         </Grid.Column>

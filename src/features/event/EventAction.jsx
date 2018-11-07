@@ -77,3 +77,15 @@ export const loadEvents = () => {
     }
   };
 };
+export const cancelToggle=(cancelled,eventId)=>
+  async (dispatch,getState,{getFirebase,getFirestore})=>{
+    try{
+      const firestore=getFirestore();
+      await firestore.update(`events/${eventId}`,{
+        cancelled:cancelled
+      })
+     
+    }catch(error){
+      toastr.error("sorry",error)
+    }
+  }
