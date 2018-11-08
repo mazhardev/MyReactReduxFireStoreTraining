@@ -6,7 +6,7 @@ import format from "date-fns/format";
 import {objectToArray} from '../../../app/common/util/helpers';
 class EventListItem extends Component {
   render() {
-    const { event, onEventDelete } = this.props;
+    const { event } = this.props;
     return (
       <div>
         <Segment.Group>
@@ -55,13 +55,7 @@ class EventListItem extends Component {
           </Segment>
           <Segment clearing>
             <span>{event.description}</span>
-            <Button
-              onClick={onEventDelete(event.id)}
-              as="a"
-              color="red"
-              floated="right"
-              content="delete"
-            />
+           
             <Button
               as={Link}
               to={`/event/${event.id}`}

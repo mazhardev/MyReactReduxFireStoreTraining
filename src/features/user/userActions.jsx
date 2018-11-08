@@ -122,7 +122,7 @@ export const goingToEvent = event => async (
   const attendee = {
     going: true,
     joinDate: Date.now(),
-    photoURL: photoURL,
+    photoURL: photoURL || "/assets/user.png",
     displayName: user.displayName,
     host: false
   };
@@ -157,6 +157,6 @@ export const cancelGoingToEvent = event => async (
     toastr.success("Success", "You have removed youreself from the event");
   } catch (error) {
     console.log(error);
-    toastr.error("Error", "Sorry problem with cancel sighned event");
+    toastr.error("Error", "Sorry problem with cancel event");
   }
 };
