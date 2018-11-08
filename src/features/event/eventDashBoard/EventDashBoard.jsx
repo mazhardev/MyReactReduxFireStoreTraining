@@ -5,11 +5,10 @@ import { connect } from "react-redux";
 import { deleteEvent } from "../EventAction";
 import LoadingComponent from "../../../app/layout/LoadingComponent";
 import EventActivity from "../eventActivity/EventActivity";
-import { firestoreConnect } from "react-redux-firebase";
+import { firestoreConnect, isLoaded, isEmpty } from "react-redux-firebase";
 
 const mapState = state => ({
-  events: state.firestore.ordered.events,
-  loading: state.async.loading
+  events: state.firestore.ordered.events
 });
 
 const actions = {
@@ -21,8 +20,9 @@ class EventDashBoard extends Component {
     this.props.deleteEvent(eventId);
   };
   render() {
-    const { loading } = this.props;
-    if (loading) return <LoadingComponent inverted={true} />;
+    const { events } = this.props;
+    if (!isLoaded(events) || isEmpty(events))
+      return <LoadingComponent inverted={true} />;
     return (
       <Grid>
         <Grid.Column width={10}>
