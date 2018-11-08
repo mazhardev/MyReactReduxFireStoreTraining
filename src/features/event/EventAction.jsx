@@ -77,15 +77,23 @@ export const loadEvents = () => {
     }
   };
 };
-export const cancelToggle=(cancelled,eventId)=>
-  async (dispatch,getState,{getFirebase,getFirestore})=>{
-    try{
-      const firestore=getFirestore();
-      await firestore.update(`events/${eventId}`,{
-        cancelled:cancelled
-      })
-     
-    }catch(error){
-      toastr.error("sorry",error)
-    }
+export const cancelToggle = (cancelled, eventId) => async (
+  dispatch,
+  getState,
+  { getFirebase, getFirestore }
+) => {
+  const message = cancelled
+    ? "Are you sure you want to cancel the event ?"
+    : "This will reactivate the event -are you sure?";
+  try {
+    const firestore = getFirestore();
+    toastr.confirm(message, {
+      onOk: () =>
+        firestore.update(`events/${eventId}`, {
+          cancelled: cancelled
+        })
+    });
+  } catch (error) {
+    toastr.error("sorry", error);
   }
+};
