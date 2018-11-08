@@ -7,7 +7,7 @@ import { Grid } from "semantic-ui-react";
 import { connect } from "react-redux";
 import { withFirestore } from "react-redux-firebase";
 import { objectToArray } from "../../../app/common/util/helpers";
-import {goingToEvent} from '../../user/userActions'
+import { goingToEvent, cancelGoingToEvent } from "../../user/userActions";
 const mapState = state => {
   let event = {};
   if (state.firestore.ordered.events && state.firestore.ordered.events[0]) {
@@ -18,20 +18,22 @@ const mapState = state => {
     auth: state.firebase.auth
   };
 };
-const actions={
-  goingToEvent
-}
+const actions = {
+  goingToEvent,
+  cancelGoingToEvent
+};
 class EventDetailedPage extends Component {
   async componentDidMount() {
     const { firestore, match } = this.props;
-     await firestore.setListener(`events/${match.params.id}`);
-  } async componentWillUnmount() {
+    await firestore.setListener(`events/${match.params.id}`);
+  }
+  async componentWillUnmount() {
     const { firestore, match } = this.props;
-     await firestore.unsetListener(`events/${match.params.id}`);
+    await firestore.unsetListener(`events/${match.params.id}`);
   }
 
   render() {
-    const { event, auth,goingToEvent } = this.props;
+    const { event, auth, goingToEvent, cancelGoingToEvent } = this.props;
     const attendees =
       event && event.attendees && objectToArray(event.attendees);
     const isHost = event.hostUid === auth.uid;
@@ -44,6 +46,7 @@ class EventDetailedPage extends Component {
             isHost={isHost}
             isGoing={isGoing}
             goingToEvent={goingToEvent}
+            cancelGoingToEvent={cancelGoingToEvent}
           />
           <EventDetailedInfo event={event} />
           <EventDetailedChat />
@@ -56,4 +59,9 @@ class EventDetailedPage extends Component {
   }
 }
 
-export default withFirestore(connect(mapState,actions)(EventDetailedPage));
+export default withFirestore(
+  connect(
+    mapState,
+    actions
+  )(EventDetailedPage)
+);
