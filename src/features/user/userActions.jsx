@@ -110,3 +110,35 @@ export const setMainPhoto = photo => async (
     throw new Error("Problem stting main page");
   }
 };
+
+export const goingToEvent = event => async (
+  dispatch,
+  getState,
+  { getFirebase, getFirestore }
+) => {
+  const firestore = getFirestore();
+  const user = firestore.auth().currentUser;
+  const photoURL = getState().firebase.profile.photoURL;
+  const attendee = {
+    going: true,
+    joinDate: Date.now(),
+    photoURL: photoURL,
+    displayName: user.displayName,
+    host: false
+  };
+  try {
+    await firestore.update(`events/${event.id}`, {
+      [`attendees.${user.uid}`]: attendee
+    });
+    await firestore.set(`event_attendee/${event.id}_${user.uid}`, {
+      eventId: event.id,
+      userUid: user.uid,
+      eventDate: event.date,
+      host: false
+    });
+    toastr.success("Success", "You have successfuly signed up to the event");
+  } catch (error) {
+    console.log(error);
+    toastr.error("Error", "Problem with signed up event!");
+  }
+};
