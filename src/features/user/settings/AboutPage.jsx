@@ -48,7 +48,7 @@ const AboutPage = ({ pristine, submitting, handleSubmit, updateProfile }) => {
         </Form.Group>
         <Divider />
         <label>Tell us about yourself</label>
-        <Field name="about" component={TextArea} placeholder="About Me" />
+        <Field name="description" component={TextArea} placeholder="About Me" />
         <Field
           name="interests"
           component={SelectInput}
