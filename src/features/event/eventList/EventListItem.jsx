@@ -8,7 +8,7 @@ class EventListItem extends Component {
   render() {
     const { event } = this.props;
     return (
-      <div>
+     
         <Segment.Group>
           <Segment>
             <Item.Group>
@@ -65,7 +65,7 @@ class EventListItem extends Component {
             />
           </Segment>
         </Segment.Group>
-      </div>
+    
     );
   }
 }
