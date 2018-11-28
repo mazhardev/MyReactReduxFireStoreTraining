@@ -91,18 +91,18 @@ export const getEventsForDashboard = lastEvent => async (
     let query;
     lastEvent
       ? (query = eventRefs
-          .where("date", ">", today)
+         // .where("date", "<", today)
           .orderBy("date")
           .startAfter(startAfter)
           .limit(2))
       : (query = eventRefs
-          .where("date", ">=", today)
+    //      .where("date", "<", today)
           .orderBy("date")
           .limit(2));
     const querySnap = await query.get();
     if (querySnap.docs.length === 0) {
       dispatch(asyncActionFinish());
-      return;
+      return querySnap;
     }
     let events = [];
     for (let i = 0; i < querySnap.docs.length; i++) {
