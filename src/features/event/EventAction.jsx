@@ -1,13 +1,13 @@
-import { DELETE_EVENT, FETCH_EVENTS } from "./EventConstant";
+import {FETCH_EVENTS } from "./EventConstant";
 import {
   asyncActionStart,
   asyncActionFinish,
   asyncActionError
 } from "../async/asyncActions";
-import { fetchSampleData } from "../../app/data/mockApi";
 import { toastr } from "react-redux-toastr";
 import { createNewEvent } from "../../app/common/util/helpers";
 import moment from "moment";
+import firebase  from '../../app/config/firbase'
 export const fetchEvents = events => {
   return {
     type: FETCH_EVENTS,
@@ -37,19 +37,6 @@ export const createEvent = event => {
   };
 };
 
-export const deleteEvent = eventid => {
-  return async dispatch => {
-    try {
-      dispatch({
-        type: DELETE_EVENT,
-        payload: { eventid }
-      });
-      toastr.success("Success!", "Event has been Deleted");
-    } catch (error) {
-      toastr.success("Oops", "Something went wrong");
-    }
-  };
-};
 export const updateEvent = event => {
   return async (dispatch, getState, { getFirebase, getFirestore }) => {
     try {
@@ -64,19 +51,7 @@ export const updateEvent = event => {
     }
   };
 };
-export const loadEvents = () => {
-  return async dispatch => {
-    try {
-      dispatch(asyncActionStart());
-      let events = await fetchSampleData();
-      dispatch(fetchEvents(events));
-      dispatch(asyncActionFinish());
-    } catch (error) {
-      console.log(error);
-      dispatch(asyncActionError());
-    }
-  };
-};
+
 export const cancelToggle = (cancelled, eventId) => async (
   dispatch,
   getState,
@@ -97,3 +72,25 @@ export const cancelToggle = (cancelled, eventId) => async (
     toastr.error("sorry", error);
   }
 };
+
+export const getEventsForDashboard=()=>async(
+  dispatch,getState
+)=>{
+ const today=new Date(Date.now());
+ const firestore=firebase.firestore();
+ const eventsQuery=firestore.collection('events').where('date','>=',today);
+ try{
+  dispatch(asyncActionStart())
+   const querySnap=await eventsQuery.get();
+  let events=[];
+  for(let i=0;i<querySnap.docs.length;i++){
+    let evt={...querySnap.docs[i].data(),id:querySnap.docs[i].id}
+    events.push(evt)
+  }
+  dispatch({type:FETCH_EVENTS,payload:{events}})
+  dispatch(asyncActionFinish())
+ }catch(error){
+   console.log(error)
+   dispatch(asyncActionError())
+ }
+}

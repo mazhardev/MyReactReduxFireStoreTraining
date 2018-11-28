@@ -2,32 +2,38 @@ import React, { Component } from "react";
 import { Grid } from "semantic-ui-react";
 import EventList from "../eventList/EventList";
 import { connect } from "react-redux";
-import { deleteEvent } from "../EventAction";
+import { getEventsForDashboard } from "../EventAction";
 import LoadingComponent from "../../../app/layout/LoadingComponent";
 import EventActivity from "../eventActivity/EventActivity";
-import { firestoreConnect, isLoaded, isEmpty } from "react-redux-firebase";
+import { firestoreConnect } from "react-redux-firebase";
 
 const mapState = state => ({
-  events: state.firestore.ordered.events
+  events: state.events,
+  loading:state.async.loading
 });
 
 const actions = {
-  deleteEvent
+  getEventsForDashboard
 };
 
 class EventDashBoard extends Component {
+ 
+  componentDidMount(){
+    this.props.getEventsForDashboard();
+  }
+ 
   handleDeleteEvent = eventId => () => {
     this.props.deleteEvent(eventId);
   };
   render() {
-    const { events } = this.props;
-    if (!isLoaded(events) || isEmpty(events))
-      return <LoadingComponent inverted={true} />;
+    
+    const { events,loading } = this.props;
+    if (loading) return <LoadingComponent inverted={true} />;
     return (
       <Grid>
         <Grid.Column width={10}>
           <EventList
-            events={this.props.events}
+            events={events}
             onEventDelete={this.handleDeleteEvent}
           />
         </Grid.Column>
