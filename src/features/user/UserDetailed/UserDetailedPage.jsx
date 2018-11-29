@@ -36,7 +36,7 @@ const actions = {
 };
 class UserDetailedPage extends Component {
   async componentDidMount() {
-    let events = await this.props.getUserEvents(this.props.userUid,3);
+    let events = await this.props.getUserEvents(this.props.userUid);
     console.log(events);
   }
   render() {
