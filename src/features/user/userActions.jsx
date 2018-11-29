@@ -6,6 +6,7 @@ import {
   asyncActionFinish,
   asyncActionError
 } from "../async/asyncActions";
+import firebase from "../../app/config/firbase";
 
 export const updateProfile = user => async (
   dispatch,
@@ -158,5 +159,47 @@ export const cancelGoingToEvent = event => async (
   } catch (error) {
     console.log(error);
     toastr.error("Error", "Sorry problem with cancel event");
+  }
+};
+export const getUserEvents = (userUid, activeTabe) => async (
+  dispatch,
+  getState
+) => {
+  dispatch(asyncActionStart());
+  const today = new Date(Date.now());
+  const firestore = firebase.firestore();
+  const eventsRef = firestore.collection("event_attendee");
+  let query;
+  switch (activeTabe) {
+    case 1: //past events
+      query = eventsRef
+        .where("userUid", "==", userUid)
+        .where("eventDate", "<=", today)
+        .orderBy("eventDate", "desc");
+      break;
+    case 2: //future Events
+      query = eventsRef
+        .where("userUid", "==", userUid)
+        .where("eventDate", ">", today)
+        .orderBy("eventDate");
+      break;
+    case 3: //hosted events
+      query = eventsRef
+        .where("userUid", "==", userUid)
+        .where("host", "==", true)
+        .orderBy("eventDate", "desc");
+      break;
+    default:
+      query = eventsRef
+        .where("userUid", "==", userUid)
+        .orderBy("eventDate", "desc");
+  }
+  try {
+    let querySnap = await query.get();
+    console.log(querySnap);
+    dispatch(asyncActionFinish());
+  } catch (error) {
+    console.log(error);
+    dispatch(asyncActionError());
   }
 };
