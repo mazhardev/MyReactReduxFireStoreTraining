@@ -5,19 +5,22 @@ import EventDetailedChat from "./EventDetailedChat";
 import EventDetailedSidebar from "./EventDetailedSidebar";
 import { Grid } from "semantic-ui-react";
 import { connect } from "react-redux";
-import { withFirestore, firebaseConnect } from "react-redux-firebase";
+import { withFirestore, firebaseConnect, isEmpty } from "react-redux-firebase";
 import { objectToArray } from "../../../app/common/util/helpers";
 import { goingToEvent, cancelGoingToEvent } from "../../user/userActions";
 import { compose } from "redux";
 import { addEventComment } from "../EventAction";
-const mapState = state => {
+const mapState = (state, ownProps) => {
   let event = {};
   if (state.firestore.ordered.events && state.firestore.ordered.events[0]) {
     event = state.firestore.ordered.events[0];
   }
   return {
     event,
-    auth: state.firebase.auth
+    auth: state.firebase.auth,
+    eventChat:
+      !isEmpty(state.firebase.data.event_chat) &&
+      objectToArray(state.firebase.data.event_chat[ownProps.match.params.id])
   };
 };
 const actions = {
@@ -36,7 +39,14 @@ class EventDetailedPage extends Component {
   }
 
   render() {
-    const { event, auth, goingToEvent, cancelGoingToEvent,addEventComment } = this.props;
+    const {
+      event,
+      auth,
+      goingToEvent,
+      cancelGoingToEvent,
+      addEventComment,
+      eventChat
+    } = this.props;
     const attendees =
       event && event.attendees && objectToArray(event.attendees);
     const isHost = event.hostUid === auth.uid;
@@ -52,7 +62,11 @@ class EventDetailedPage extends Component {
             cancelGoingToEvent={cancelGoingToEvent}
           />
           <EventDetailedInfo event={event} />
-          <EventDetailedChat addEventComment={addEventComment} eventId={event.id} />
+          <EventDetailedChat
+            eventChat={eventChat}
+            addEventComment={addEventComment}
+            eventId={event.id}
+          />
         </Grid.Column>
         <Grid.Column width={6}>
           <EventDetailedSidebar attendees={attendees} />
@@ -68,6 +82,5 @@ export default compose(
     mapState,
     actions
   ),
-  firebaseConnect((props) => ([`event_chat/${props.match.params.id}`]))
-  )(EventDetailedPage);
-
+  firebaseConnect(props => [`event_chat/${props.match.params.id}`])
+)(EventDetailedPage);
