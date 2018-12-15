@@ -5,17 +5,25 @@ import { Link } from "react-router-dom";
 import distanceInWords from "date-fns/distance_in_words";
 class EventDetailedChat extends Component {
   state = {
-    showReplyForm: false
+    showReplyForm: false,
+    selectedCommentId: null
   };
 
-  handleReplyForm = () => {
+  handleReplyForm = id => () => {
     this.setState({
-      showReplyForm: true
+      showReplyForm: true,
+      selectedCommentId: id
     });
   };
+  handleCloseForm=()=>{
+    this.setState({
+      showReplyForm:false,
+      selectedCommentId:null
+    })
+  }
   render() {
     const { addEventComment, eventId, eventChat } = this.props;
-    const { showReplyForm } = this.state;
+    const { showReplyForm, selectedCommentId } = this.state;
     return (
       <div>
         <Segment
@@ -45,13 +53,17 @@ class EventDetailedChat extends Component {
                     </Comment.Metadata>
                     <Comment.Text>{comment.text}</Comment.Text>
                     <Comment.Actions>
-                      <Comment.Action onClick={this.handleReplyForm}>
+                      <Comment.Action
+                        onClick={this.handleReplyForm(comment.id)}
+                      >
                         Reply
                       </Comment.Action>
-                      {showReplyForm && (
+                      {showReplyForm && selectedCommentId === comment.id && (
                         <EventDetailedChatForm
                           addEventComment={addEventComment}
                           eventId={eventId}
+                          form={`reply_${comment.id}`}
+                          closeForm={this.handleCloseForm}
                         />
                       )}
                     </Comment.Actions>
@@ -61,6 +73,7 @@ class EventDetailedChat extends Component {
             <EventDetailedChatForm
               addEventComment={addEventComment}
               eventId={eventId}
+              form={"newComment"}
             />
           </Comment.Group>
         </Segment>
