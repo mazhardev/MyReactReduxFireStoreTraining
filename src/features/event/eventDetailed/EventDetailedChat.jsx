@@ -15,12 +15,12 @@ class EventDetailedChat extends Component {
       selectedCommentId: id
     });
   };
-  handleCloseForm=()=>{
+  handleCloseReplyForm = () => {
     this.setState({
-      showReplyForm:false,
-      selectedCommentId:null
-    })
-  }
+      showReplyForm: false,
+      selectedCommentId: null
+    });
+  };
   render() {
     const { addEventComment, eventId, eventChat } = this.props;
     const { showReplyForm, selectedCommentId } = this.state;
@@ -63,7 +63,8 @@ class EventDetailedChat extends Component {
                           addEventComment={addEventComment}
                           eventId={eventId}
                           form={`reply_${comment.id}`}
-                          closeForm={this.handleCloseForm}
+                          closeForm={this.handleCloseReplyForm}
+                          parentId={comment.id}
                         />
                       )}
                     </Comment.Actions>
@@ -74,6 +75,7 @@ class EventDetailedChat extends Component {
               addEventComment={addEventComment}
               eventId={eventId}
               form={"newComment"}
+              parentId={0}
             />
           </Comment.Group>
         </Segment>

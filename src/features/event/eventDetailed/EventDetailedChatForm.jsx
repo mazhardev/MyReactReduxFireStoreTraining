@@ -7,7 +7,9 @@ class EventDetailedChatForm extends Component {
     const { addEventComment, reset, eventId, parentId, closeForm } = this.props;
     addEventComment(eventId, values, parentId);
     reset();
-    closeForm();
+    if (parentId !== 0) {
+      closeForm();
+    }
   };
   render() {
     return (

@@ -126,7 +126,7 @@ export const addEventComment = (eventId, values, parentId) => async (
   const profile = getState().firebase.profile;
   const user = firebase.auth().currentUser;
   let newComment = {
-    parentId: "parentId",
+    parentId: parentId,
     displayName: profile.displayName,
     photoURL: profile.photoURL || "/assets/user.png",
     uid: user.uid,
