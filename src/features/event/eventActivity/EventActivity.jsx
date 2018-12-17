@@ -1,17 +1,17 @@
 import React from "react";
-import { Header, Segment } from "semantic-ui-react";
-
-function EventActivity() {
+import { Header, Segment, Feed } from "semantic-ui-react";
+import EventActivityItem from "./EventActivityItem";
+function EventActivity({ activities }) {
   return (
     <div>
       <Header attached="top" content="Recent Activity" />
       <Segment attached>
-        <p>
-          Lorem ipsum dolor sit, amet consectetur adipisicing elit. Obcaecati
-          ducimus laboriosam quam quod! Voluptates illo enim aspernatur vel
-          aliquam blanditiis eius, officiis autem nesciunt minus nostrum
-          explicabo neque. Corporis, consectetur.
-        </p>
+        <Feed>
+          {activities &&
+            activities.map(activity => (
+              <EventActivityItem key={activity.id} activity={activity} />
+            ))}
+        </Feed>
       </Segment>
     </div>
   );

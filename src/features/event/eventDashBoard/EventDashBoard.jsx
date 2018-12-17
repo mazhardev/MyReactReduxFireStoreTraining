@@ -7,9 +7,18 @@ import LoadingComponent from "../../../app/layout/LoadingComponent";
 import EventActivity from "../eventActivity/EventActivity";
 import { firestoreConnect } from "react-redux-firebase";
 
+const query = [
+  {
+    collection: "activity",
+    orderBy: ["timestamp", "desc"],
+    limit: 5
+  }
+];
+
 const mapState = state => ({
   events: state.events,
-  loading: state.async.loading
+  loading: state.async.loading,
+  activities: state.firestore.ordered.activity
 });
 
 const actions = {
@@ -51,7 +60,7 @@ class EventDashBoard extends Component {
     }
   };
   render() {
-    const { loading } = this.props;
+    const { loading, activities } = this.props;
     const { moreEvents, loadedEvents } = this.state;
     if (this.state.initialLoading) return <LoadingComponent inverted={true} />;
     return (
@@ -73,10 +82,10 @@ class EventDashBoard extends Component {
           /> */}
         </Grid.Column>
         <Grid.Column width={6}>
-          <EventActivity />
+          <EventActivity activities={activities} />
         </Grid.Column>
         <Grid.Column width={10}>
-          {loading ? <Loader active={loading} />:"No More Events" }
+          {loading ? <Loader active={loading} /> : "No More Events"}
         </Grid.Column>
       </Grid>
     );
@@ -85,4 +94,4 @@ class EventDashBoard extends Component {
 export default connect(
   mapState,
   actions
-)(firestoreConnect([{ collection: "events" }])(EventDashBoard));
+)(firestoreConnect(query)(EventDashBoard));
