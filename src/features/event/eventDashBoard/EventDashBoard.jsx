@@ -36,7 +36,8 @@ class EventDashBoard extends Component {
     if (next && next.docs && next.docs.length > 1) {
       this.setState({
         moreEvents: true,
-        initialLoading: false
+        initialLoading: false,
+        contextRefs: {}
       });
     }
   }
@@ -59,6 +60,8 @@ class EventDashBoard extends Component {
       });
     }
   };
+  handleContextRefs = contextRefs => this.setState({ contextRefs });
+
   render() {
     const { loading, activities } = this.props;
     const { moreEvents, loadedEvents } = this.state;
@@ -66,12 +69,14 @@ class EventDashBoard extends Component {
     return (
       <Grid>
         <Grid.Column width={10}>
-          <EventList
-            loading={loading}
-            moreEvents={moreEvents}
-            events={loadedEvents}
-            getNextEvents={this.getNextEvents}
-          />
+          <div ref={this.handleContextRefs}>
+            <EventList
+              loading={loading}
+              moreEvents={moreEvents}
+              events={loadedEvents}
+              getNextEvents={this.getNextEvents}
+            />
+          </div>
           {/* <Button
             onClick={this.getNextEvents}
             disabled={!this.state.moreEvents}
@@ -82,7 +87,10 @@ class EventDashBoard extends Component {
           /> */}
         </Grid.Column>
         <Grid.Column width={6}>
-          <EventActivity activities={activities} />
+          <EventActivity
+            activities={activities}
+            contextRefs={this.state.contextRefs}
+          />
         </Grid.Column>
         <Grid.Column width={10}>
           {loading ? <Loader active={loading} /> : "No More Events"}

@@ -1,9 +1,9 @@
 import React from "react";
-import { Header, Segment, Feed } from "semantic-ui-react";
+import { Header, Segment, Feed, Sticky } from "semantic-ui-react";
 import EventActivityItem from "./EventActivityItem";
-function EventActivity({ activities }) {
+function EventActivity({ activities, contextRefs }) {
   return (
-    <div>
+    <Sticky context={contextRefs} offset={100}>
       <Header attached="top" content="Recent Activity" />
       <Segment attached>
         <Feed>
@@ -13,7 +13,7 @@ function EventActivity({ activities }) {
             ))}
         </Feed>
       </Segment>
-    </div>
+    </Sticky>
   );
 }
 
