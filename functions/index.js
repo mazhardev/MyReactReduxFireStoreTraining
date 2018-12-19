@@ -36,31 +36,71 @@ exports.createActivity = functions.firestore
       });
   });
 
-  exports.cancelActivity = functions.firestore.document('events/{eventId}').onUpdate((event, context) => {
+exports.cancelActivity = functions.firestore
+  .document("events/{eventId}")
+  .onUpdate((event, context) => {
     let updatedEvent = event.after.data();
     let previousEventData = event.before.data();
     console.log({ event });
     console.log({ context });
     console.log({ updatedEvent });
     console.log({ previousEventData });
-  
-    if (!updatedEvent.cancelled || updatedEvent.cancelled === previousEventData.cancelled) {
+
+    if (
+      !updatedEvent.cancelled ||
+      updatedEvent.cancelled === previousEventData.cancelled
+    ) {
       return false;
     }
-  
-    const activity = newActivity('cancelledEvent', updatedEvent, context.params.eventId);
-  
+
+    const activity = newActivity(
+      "cancelledEvent",
+      updatedEvent,
+      context.params.eventId
+    );
+
     console.log({ activity });
-  
+
     return admin
       .firestore()
-      .collection('activity')
+      .collection("activity")
       .add(activity)
       .then(docRef => {
-        return console.log('Activity created with id: ', docRef.id);
+        return console.log("Activity created with id: ", docRef.id);
       })
       .catch(err => {
-        return console.log('Error adding activity', err);
+        return console.log("Error adding activity", err);
       });
   });
-  
+
+exports.userFollowing = functions.firestore
+  .document("users/{followerUid}/following/{followingUid}")
+  .onCreate((event, context) => {
+    console.log("v1");
+    const followerUid = context.params.followerUid;
+    const followingUid = context.params.followingUid;
+
+    const followerDoc = admin
+      .firestore()
+      .collection("users")
+      .doc(followerUid);
+
+    console.log(followerDoc);
+
+    return followerDoc.get().then(doc => {
+      let userData = doc.data();
+      console.log({ userData });
+      let follower = {
+        displayName: userData.displayName,
+        photoURL: userData.photoURL || "/assets/user.png",
+        city: userData.city || "unknown city"
+      };
+      return admin
+        .firestore()
+        .collection("users")
+        .doc(followingUid)
+        .collection("followers")
+        .doc(followerUid)
+        .set(follower);
+    });
+  });
