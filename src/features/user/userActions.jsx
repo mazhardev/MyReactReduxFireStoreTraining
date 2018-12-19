@@ -7,7 +7,7 @@ import {
   asyncActionError
 } from "../async/asyncActions";
 import firebase from "../../app/config/firbase";
-import { FETCH_EVENTS } from '../event/EventConstant'
+import { FETCH_EVENTS } from "../event/EventConstant";
 
 export const updateProfile = user => async (
   dispatch,
@@ -205,10 +205,39 @@ export const getUserEvents = (userUid, activeTabe) => async (
         .get();
       events.push({ ...evt.data(), id: evt.id });
     }
-    dispatch({type:FETCH_EVENTS,payload:{events}})
+    dispatch({ type: FETCH_EVENTS, payload: { events } });
     dispatch(asyncActionFinish());
   } catch (error) {
     console.log(error);
     dispatch(asyncActionError());
+  }
+};
+
+export const follow = followToUserId => async (
+  dispatch,
+  getState,
+  { getFirestore, getFirebase }
+) => {
+  const firestore = getFirestore();
+  const currentUser = firestore.auth().currentUser;
+  const city = getState().firebase.profile.city;
+  try {
+    let following = {
+      city: city || "unKnownCity",
+      displayName: currentUser.displayName,
+      photoURL: currentUser.photoURL || "/assets/user.png"
+    };
+    console.log(followToUserId);
+    console.log(following);
+    await firestore.set(
+      {
+        collection: "users",
+        doc: currentUser.uid,
+        subcollections: [{ collection: "following", doc: followToUserId }]
+      },
+      following
+    );
+  } catch (error) {
+    console.log(error);
   }
 };
