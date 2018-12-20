@@ -1,4 +1,4 @@
-export const userDetailedQuery = ({ auth, userUid }) => {
+export const userDetailedQuery = ({ auth, userUid,match }) => {
   if (userUid !== null) {
     return [
       {
@@ -11,6 +11,12 @@ export const userDetailedQuery = ({ auth, userUid }) => {
         doc: userUid,
         subcollections: [{ collection: "photos" }],
         storeAs: "photos"
+      },
+      {
+        collection: "users",
+        doc: auth.uid,
+        subcollections: [{ collection: "following" ,doc:match.params.id}],
+        storeAs: "following"
       }
     ];
   } else {
@@ -23,4 +29,23 @@ export const userDetailedQuery = ({ auth, userUid }) => {
       }
     ];
   }
+};
+export const queryGetFollowersAndFollowing = ({ auth }) => {
+  console.log("userUid");
+  console.log(auth.uid);
+
+  return [
+    {
+      collection: "users",
+      doc: auth.uid,
+      subcollections: [{ collection: "followers" }],
+      storeAs: "followers"
+    },
+    {
+      collection: "users",
+      doc: auth.uid,
+      subcollections: [{ collection: "following" }],
+      storeAs: "following"
+    }
+  ];
 };

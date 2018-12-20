@@ -213,27 +213,26 @@ export const getUserEvents = (userUid, activeTabe) => async (
   }
 };
 
-export const follow = followToUserId => async (
+export const follow = userToFollow => async (
   dispatch,
   getState,
   { getFirestore, getFirebase }
 ) => {
   const firestore = getFirestore();
   const currentUser = firestore.auth().currentUser;
-  const city = getState().firebase.profile.city;
   try {
     let following = {
-      city: city || "unKnownCity",
-      displayName: currentUser.displayName,
-      photoURL: currentUser.photoURL || "/assets/user.png"
+      city: userToFollow.city || "unKnownCity",
+      displayName: userToFollow.displayName,
+      photoURL: userToFollow.photoURL || "/assets/user.png"
     };
-    console.log(followToUserId);
+    console.log(userToFollow);
     console.log(following);
     await firestore.set(
       {
         collection: "users",
         doc: currentUser.uid,
-        subcollections: [{ collection: "following", doc: followToUserId }]
+        subcollections: [{ collection: "following", doc: userToFollow.id }]
       },
       following
     );

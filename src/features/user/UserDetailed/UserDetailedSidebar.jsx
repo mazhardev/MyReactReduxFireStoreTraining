@@ -2,11 +2,11 @@ import React from "react";
 import { Button, Grid, Segment } from "semantic-ui-react";
 import { Link } from "react-router-dom";
 
-const UserDetailedSidebar = ({ isCurrentUser,userUid,follow }) => {
+const UserDetailedSidebar = ({ isCurrentUser, profile, follow,following }) => {
   return (
     <Grid.Column width={4}>
       <Segment>
-        {isCurrentUser && isCurrentUser ? (
+        {isCurrentUser && (
           <Button
             as={Link}
             to="/settings"
@@ -15,8 +15,25 @@ const UserDetailedSidebar = ({ isCurrentUser,userUid,follow }) => {
             basic
             content="Edit Profile"
           />
-        ) : (
-          <Button onClick={()=>follow(userUid)} color="teal" fluid basic content="Follow user" />
+        )}
+
+        {!isCurrentUser && !following && (
+          <Button
+            onClick={() => follow(profile)}
+            color="teal"
+            fluid
+            basic
+            content="Follow user"
+          />
+        )}
+        {!isCurrentUser && following && (
+          <Button
+            
+            color="teal"
+            fluid
+            basic
+            content="Unfollow user"
+          />
         )}
       </Segment>
     </Grid.Column>
