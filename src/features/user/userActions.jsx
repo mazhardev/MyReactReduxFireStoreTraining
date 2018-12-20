@@ -240,3 +240,20 @@ export const follow = userToFollow => async (
     console.log(error);
   }
 };
+export const unfollow = userToUnfollow => async (
+  dispatch,
+  getState,
+  { getFirebase, getFirestore }
+) => {
+  try {
+    const firestore = getFirestore();
+    const currentUser = firestore.auth().currentUser;
+    await firestore.delete({
+      collection: "users",
+      doc: currentUser.uid,
+      subcollections: [{ collection: "following", doc: userToUnfollow.id }]
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};

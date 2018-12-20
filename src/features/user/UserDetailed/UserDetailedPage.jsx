@@ -10,7 +10,7 @@ import UserDetailedSidebar from "./UserDetailedSidebar";
 import UserDetailedEvents from "./UserDetailedEvents";
 import { userDetailedQuery } from "../userQueries";
 import LoadingComponent from "../../../app/layout/LoadingComponent";
-import { getUserEvents, follow } from "../userActions";
+import { getUserEvents, follow, unfollow } from "../userActions";
 
 const mapState = (state, ownProps) => {
   let userUid = null;
@@ -31,12 +31,13 @@ const mapState = (state, ownProps) => {
     requesting: state.firestore.status.requesting,
     events: state.events,
     eventsLoading: state.async.loading,
-    following:state.firestore.ordered.following
+    following: state.firestore.ordered.following
   };
 };
 const actions = {
   getUserEvents,
-  follow
+  follow,
+  unfollow
 };
 class UserDetailedPage extends Component {
   async componentDidMount() {
@@ -56,11 +57,12 @@ class UserDetailedPage extends Component {
       events,
       eventsLoading,
       follow,
-      following
+      following,
+      unfollow
     } = this.props;
     const isCurrentUser = auth.uid === match.params.id;
     const loading = Object.values(requesting).some(a => a === true);
-    const isFollowing=!isEmpty(following);
+    const isFollowing = !isEmpty(following);
     if (loading) return <LoadingComponent inverted={true} />;
     return (
       <Grid>
@@ -71,6 +73,7 @@ class UserDetailedPage extends Component {
           isCurrentUser={isCurrentUser}
           follow={follow}
           following={isFollowing}
+          unfollow={unfollow}
         />
         {photos && photos.length > 0 && <UserDetailedPhotos photos={photos} />}
         <UserDetailedEvents
@@ -88,5 +91,7 @@ export default compose(
     mapState,
     actions
   ),
-  firestoreConnect((auth, userUid,match) => userDetailedQuery(auth, userUid,match))
+  firestoreConnect((auth, userUid, match) =>
+    userDetailedQuery(auth, userUid, match)
+  )
 )(UserDetailedPage);
