@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Button } from 'semantic-ui-react'
 import { connect } from 'react-redux'
-import { incrementAsync, decrementAsync } from './actions'
+import { incrementAsync, decrementAsync,permissionTest } from './actions'
 import  Script  from "react-load-script"
 import PlacesAutocomplete, { geocodeByAddress, getLatLng } from 'react-places-autocomplete'
 import { openModal } from '../modals/modalActions'
@@ -13,7 +13,8 @@ const mapState = (state) => ({
 const actions = {
   incrementAsync,
   decrementAsync,
-  openModal
+  openModal,
+  permissionTest
 }
 
 class TestComponent extends Component {
@@ -44,7 +45,7 @@ onChange=(address)=>{this.setState({address})}
       value: this.state.address,
       onChange: this.onChange,
     }
-    const {incrementAsync, decrementAsync, data,openModal,loading} = this.props;
+    const {incrementAsync, decrementAsync, data,openModal,loading,permissionTest} = this.props;
     return (
       <div>
        {  <Script
@@ -56,6 +57,7 @@ onChange=(address)=>{this.setState({address})}
         <Button loading={loading} onClick={incrementAsync} color='green' content='Increment' />
         <Button loading={loading} onClick={decrementAsync} color='red' content='Decrement' />
         <Button onClick={()=>openModal('TestModal',{data:43})} color='teal' content='Open Modal' />
+        <Button onClick={permissionTest} color='teal' content='Permission Test' />
         <br/><br/>
         <form onSubmit={this.handleFormSubmit}>
         {this.state.scriptLoaded &&  <PlacesAutocomplete inputProps={inputProps} /> }
