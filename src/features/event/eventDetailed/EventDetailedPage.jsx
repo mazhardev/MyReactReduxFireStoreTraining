@@ -14,6 +14,7 @@ import { goingToEvent, cancelGoingToEvent } from "../../user/userActions";
 import { compose } from "redux";
 import { addEventComment } from "../EventAction";
 import { openModal } from "../../modals/modalActions";
+import { toastr } from "react-redux-toastr";
 const mapState = (state, ownProps) => {
   let event = {};
   if (state.firestore.ordered.events && state.firestore.ordered.events[0]) {
@@ -36,7 +37,16 @@ const actions = {
 class EventDetailedPage extends Component {
   async componentDidMount() {
     const { firestore, match } = this.props;
-    await firestore.setListener(`events/${match.params.id}`);
+    let event = await firestore.get(`events/${match.params.id}`);
+    if (!event.exists) {
+      toastr.error(
+        "Not Found!",
+        "This is not the event you are looking for"
+      );
+      this.props.history.push("/error");
+    } else {
+      await firestore.setListener(`events/${match.params.id}`);
+    }
   }
   async componentWillUnmount() {
     const { firestore, match } = this.props;
@@ -72,8 +82,7 @@ class EventDetailedPage extends Component {
             IsAuthenticated={IsAuthenticated}
           />
           <EventDetailedInfo event={event} />
-          {
-            IsAuthenticated && (
+          {IsAuthenticated && (
             <EventDetailedChat
               eventChat={chatTree}
               addEventComment={addEventComment}
