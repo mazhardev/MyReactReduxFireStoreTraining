@@ -15,6 +15,8 @@ import { compose } from "redux";
 import { addEventComment } from "../EventAction";
 import { openModal } from "../../modals/modalActions";
 import { toastr } from "react-redux-toastr";
+import LoadingComponent from "../../../app/layout/LoadingComponent";
+
 const mapState = (state, ownProps) => {
   let event = {};
   if (state.firestore.ordered.events && state.firestore.ordered.events[0]) {
@@ -25,7 +27,8 @@ const mapState = (state, ownProps) => {
     auth: state.firebase.auth,
     eventChat:
       !isEmpty(state.firebase.data.event_chat) &&
-      objectToArray(state.firebase.data.event_chat[ownProps.match.params.id])
+      objectToArray(state.firebase.data.event_chat[ownProps.match.params.id]),
+    requesting: state.firestore.status.requesting
   };
 };
 const actions = {
@@ -35,17 +38,20 @@ const actions = {
   openModal
 };
 class EventDetailedPage extends Component {
+  state={
+    initialLoading:true
+  }
   async componentDidMount() {
     const { firestore, match } = this.props;
     let event = await firestore.get(`events/${match.params.id}`);
     if (!event.exists) {
-      toastr.error(
-        "Not Found!",
-        "This is not the event you are looking for"
-      );
+      toastr.error("Not Found!", "This is not the event you are looking for");
       this.props.history.push("/error");
     } else {
       await firestore.setListener(`events/${match.params.id}`);
+     this.setState({
+       initialLoading:false
+     })
     }
   }
   async componentWillUnmount() {
@@ -61,7 +67,9 @@ class EventDetailedPage extends Component {
       cancelGoingToEvent,
       addEventComment,
       eventChat,
-      openModal
+      openModal,
+      requesting,
+      match
     } = this.props;
     const attendees =
       event && event.attendees && objectToArray(event.attendees);
@@ -69,6 +77,10 @@ class EventDetailedPage extends Component {
     const isGoing = attendees && attendees.some(a => a.id === auth.uid);
     const chatTree = !isEmpty(eventChat) && createDataTree(eventChat);
     const IsAuthenticated = auth.isLoaded && !auth.isEmpty;
+    const LoadingEvents = requesting[`events/${match.params.id}`];
+    if (LoadingEvents || this.state.initialLoading) {
+      return <LoadingComponent inverted={true} />;
+    }
     return (
       <Grid>
         <Grid.Column width={10}>
