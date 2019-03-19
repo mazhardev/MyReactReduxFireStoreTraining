@@ -1,5 +1,5 @@
 import React from "react";
-import { Segment, Image, Item, Header, Button } from "semantic-ui-react";
+import { Segment, Image, Item, Header, Button, Label } from "semantic-ui-react";
 import { Link } from "react-router-dom";
 import format from "date-fns/format";
 
@@ -36,7 +36,6 @@ const EventDetailedHeader = ({
           fluid
           style={eventImageStyle}
         />
-
         <Segment basic style={eventImageTextStyle}>
           <Item.Group>
             <Item>
@@ -62,26 +61,34 @@ const EventDetailedHeader = ({
       <Segment attached="bottom">
         {!isHost && (
           <div>
-            {isGoing &&  
-             ( <Button onClick={() => cancelGoingToEvent(event)}>
+            {isGoing && !event.cancelled && (
+              <Button onClick={() => cancelGoingToEvent(event)}>
                 Cancel My Place
-              </Button>)
-            }
-            {!isGoing && IsAuthenticated &&
-             ( <Button onClick={() => goingToEvent(event)} color="teal">
+              </Button>
+            )}
+            {!isGoing && IsAuthenticated && !event.cancelled && (
+              <Button onClick={() => goingToEvent(event)} color="teal">
                 JOIN THIS EVENT
-              </Button>)
-            } {!IsAuthenticated &&
-             ( <Button onClick={()=>openModal('UnauthModal')} color="teal">
+              </Button>
+            )}{" "}
+            {!IsAuthenticated && !event.cancelled && (
+              <Button onClick={() => openModal("UnauthModal")} color="teal">
                 JOIN THIS EVENT
-              </Button>)
-            }
+              </Button>
+            )}
           </div>
         )}
         {isHost && (
           <Button as={Link} to={`/manage/${event.id}`} color="orange">
             Manage Event
           </Button>
+        )}
+        {event.cancelled && !isHost && (
+          <Label
+            size="large"
+            color="red"
+            content="This event has been cancelled!"
+          />
         )}
       </Segment>
     </Segment.Group>

@@ -38,9 +38,9 @@ const actions = {
   openModal
 };
 class EventDetailedPage extends Component {
-  state={
-    initialLoading:true
-  }
+  state = {
+    initialLoading: true
+  };
   async componentDidMount() {
     const { firestore, match } = this.props;
     let event = await firestore.get(`events/${match.params.id}`);
@@ -49,9 +49,9 @@ class EventDetailedPage extends Component {
       this.props.history.push("/error");
     } else {
       await firestore.setListener(`events/${match.params.id}`);
-     this.setState({
-       initialLoading:false
-     })
+      this.setState({
+        initialLoading: false
+      });
     }
   }
   async componentWillUnmount() {
@@ -72,7 +72,11 @@ class EventDetailedPage extends Component {
       match
     } = this.props;
     const attendees =
-      event && event.attendees && objectToArray(event.attendees);
+      event &&
+      event.attendees &&
+      objectToArray(event.attendees).sort(function(a, b) {
+        return a.joinDate - b.joinDate;
+      });
     const isHost = event.hostUid === auth.uid;
     const isGoing = attendees && attendees.some(a => a.id === auth.uid);
     const chatTree = !isEmpty(eventChat) && createDataTree(eventChat);
@@ -116,5 +120,9 @@ export default compose(
     mapState,
     actions
   ),
-  firebaseConnect(props => [`event_chat/${props.match.params.id}`])
+  firebaseConnect(
+    props =>
+      props.auth.isLoaded &&
+      !props.auth.isEmpty && [`event_chat/${props.match.params.id}`]
+  )
 )(EventDetailedPage);

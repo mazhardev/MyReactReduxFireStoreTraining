@@ -184,13 +184,17 @@ class EventForm extends Component {
               <Button onClick={this.props.history.goBack} type="button">
                 Cancel
               </Button>
-              <Button
-                onClick={() => cancelToggle(!event.cancelled, event.id)}
-                type="button"
-                color={event.cancelled ? "green" : "red"}
-                content={event.cancelled ? "Reactivate event" : "Cancel event"}
-                floated="right"
-              />
+              {event.id && (
+                <Button
+                  onClick={() => cancelToggle(!event.cancelled, event.id)}
+                  type="button"
+                  color={event.cancelled ? "green" : "red"}
+                  content={
+                    event.cancelled ? "Reactivate event" : "Cancel event"
+                  }
+                  floated="right"
+                />
+              )}
             </Form>
           </Segment>
         </Grid.Column>
