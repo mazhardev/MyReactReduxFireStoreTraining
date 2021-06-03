@@ -10,7 +10,7 @@ const UserDetailedHeader = ({profile}) => {
     age = 'unknown age'
   }
   return (
-    <Grid.Column width={16}>
+    <Grid.Column mobile={16} tablet={16} computer={16}>
       <Segment>
         <Item.Group>
           <Item>

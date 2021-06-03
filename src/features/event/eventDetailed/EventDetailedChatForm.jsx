@@ -1,16 +1,18 @@
-import React, { Component } from "react";
-import { Form, Button } from "semantic-ui-react";
-import { Field, reduxForm } from "redux-form";
-import TextArea from "../../../app/common/form/TextArea";
+import React, { Component } from 'react';
+import { Form, Button } from 'semantic-ui-react';
+import { Field, reduxForm } from 'redux-form';
+import TextArea from '../../../app/common/form/TextArea';
+
 class EventDetailedChatForm extends Component {
   handleCommentSubmit = values => {
-    const { addEventComment, reset, eventId, parentId, closeForm } = this.props;
+    const { addEventComment, reset, eventId, closeForm, parentId } = this.props;
     addEventComment(eventId, values, parentId);
     reset();
     if (parentId !== 0) {
-      closeForm();
+        closeForm();
     }
   };
+
   render() {
     return (
       <Form onSubmit={this.props.handleSubmit(this.handleCommentSubmit)}>
@@ -20,4 +22,5 @@ class EventDetailedChatForm extends Component {
     );
   }
 }
-export default reduxForm({ field: "comment" })(EventDetailedChatForm);
+
+export default reduxForm({ Fields: 'comment' })(EventDetailedChatForm);

@@ -1,66 +1,45 @@
-import React from "react";
-import { Grid } from "semantic-ui-react";
-import { Switch, Route, Redirect } from "react-router-dom";
-import SettingsNav from "./SettingsNav";
-import BasicPage from "./BasicPage";
-import AboutPage from "./AboutPage";
-import PhotosPage from "./PhotosPage";
-import AccountPage from "./AccountPage";
-import { updatePassword } from "../../auth/AuthActions";
-import { connect } from "react-redux";
-import { updateProfile } from "../userActions";
+import React from 'react';
+import { connect } from 'react-redux';
+import { Grid } from 'semantic-ui-react';
+import { Switch, Route, Redirect } from 'react-router-dom';
+import SettingsNav from './SettingsNav';
+import AboutPage from './AboutPage';
+import PhotosPage from './PhotosPage';
+import AccountPage from './AccountPage';
+import BasicPage from './BasicPage';
+import { updatePassword } from '../../auth/authActions';
+import { updateProfile } from '../userActions'
 
 const actions = {
   updatePassword,
   updateProfile
 };
-const mapState = state => ({
+
+const mapState = (state) => ({
   providerId: state.firebase.auth.providerData[0].providerId,
   user: state.firebase.profile
-});
-const SettingsDashboard = ({
-  updatePassword,
-  providerId,
-  user,
-  updateProfile
-}) => {
+})
+
+const SettingsDashboard = ({ updatePassword, providerId, user, updateProfile }) => {
   return (
-    <Grid>
-      <Grid.Column width={12}>
+    <Grid reversed='mobile vertically tablet vertically'>
+      <Grid.Column mobile={16} tablet={16} computer={12}>
         <Switch>
-          <Redirect exact from="/settings" to="/settings/BasicPage" />
+          <Redirect exact from="/settings" to="/settings/basic" />
+          <Route path="/settings/basic" render={() => <BasicPage updateProfile={updateProfile} initialValues={user}/>} />
+          <Route path="/settings/about" render={() => <AboutPage updateProfile={updateProfile} initialValues={user}/>} />
+          <Route path="/settings/photos" component={PhotosPage} />
           <Route
-            path="/settings/BasicPage"
-            render={() => (
-              <BasicPage initialValues={user} updateProfile={updateProfile} />
-            )}
-          />
-          <Route
-            path="/settings/AboutPage"
-            render={() => (
-              <AboutPage initialValues={user} updateProfile={updateProfile} />
-            )}
-          />
-          <Route path="/settings/PhotosPage" component={PhotosPage} />
-          <Route
-            path="/settings/AccountPage"
-            render={() => (
-              <AccountPage
-                providerId={providerId}
-                updatePassword={updatePassword}
-              />
-            )}
+            path="/settings/account"
+            render={() => <AccountPage updatePassword={updatePassword} providerId={providerId} />}
           />
         </Switch>
       </Grid.Column>
-      <Grid.Column width={4}>
+      <Grid.Column mobile={16} tablet={16} computer={4}>
         <SettingsNav />
       </Grid.Column>
     </Grid>
   );
 };
 
-export default connect(
-  mapState,
-  actions
-)(SettingsDashboard);
+export default connect(mapState, actions)(SettingsDashboard);

@@ -1,65 +1,31 @@
-import React, { Component } from "react";
-import { Menu, Container, Button } from "semantic-ui-react";
-import { NavLink, Link, withRouter } from "react-router-dom";
-import SignedOutMenu from "../Menu/SignedOutMenu";
-import SignedInMenu from "../Menu/SignedInMenu";
-import { connect } from "react-redux"
-import { openModal } from '../../modals/modalActions'
-import { withFirebase } from "react-redux-firebase";
+import React, { Component } from 'react';
+import AppMedia from '../../../app/common/util/appMedia'
+import DesktopMenu from '../Menus/desktop/DesktopMenu'
+import NavBarMobile from '../Menus/mobile/NavBarMobile'
 
-const actions={
-  openModal
-}
-const mapState=(state)=>({
-   auth:state.firebase.auth,
-   profile:state.firebase.profile
-})
+const { Media } = AppMedia;
+
 class NavBar extends Component {
 
-  onHandleSignedIn = () => {
-  this.props.openModal("LoginModal");
-  };
-  onHandleRegister=()=>{
-    this.props.openModal("RegisterModal")
-  }
-  onHandleSignOut = () => {
-   this.props.firebase.logout()
-    this.props.History.push('/');
-  };
-
   render() {
-   const {auth,profile}=this.props;
-   const authenticated=auth.isLoaded && !auth.isEmpty;
+    const { children } = this.props;
+
     return (
-      <Menu inverted fixed="top">
-        <Container>
-          <Menu.Item header as={Link} to="/">
-            <img src="/assets/logo.png" alt="logo" />
-            Re-vents
-          </Menu.Item>
-          <Menu.Item as={NavLink} to="/events" name="Events" />
-          <Menu.Item as={NavLink} to="/TestComponent" name="Test" />
-          {authenticated &&
-          <Menu.Item as={NavLink} to="/people" name="People" />
-          }
-         {authenticated && <Menu.Item>
-            <Button
-              as={Link}
-              to="/createEvent"
-              floated="right"
-              positive
-              inverted
-              content="Create Event"
-            />
-          </Menu.Item>}
-          {authenticated ? (
-            <SignedInMenu  profile={profile} signOut={this.onHandleSignOut} auth={auth}/>
-          ) : (
-            <SignedOutMenu signIn={this.onHandleSignedIn} register={this.onHandleRegister}/>
-          )}
-        </Container>
-      </Menu>
+      <React.Fragment>
+        <Media greaterThan="mobile">
+          <DesktopMenu
+            children={children}
+          />
+        </Media>
+
+        <Media at="mobile">
+          <NavBarMobile
+            children={children}
+          />
+        </Media>
+      </React.Fragment>
     );
   }
 }
-export default withRouter(withFirebase(connect(mapState,actions)(NavBar)));
+
+export default NavBar;

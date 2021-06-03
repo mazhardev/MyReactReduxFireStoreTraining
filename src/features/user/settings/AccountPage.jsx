@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import {
   Segment,
   Header,
@@ -7,21 +7,21 @@ import {
   Label,
   Button,
   Icon
-} from "semantic-ui-react";
-import { Field, reduxForm } from "redux-form";
-import TextInput from "../../../app/common/form/TextInput";
+} from 'semantic-ui-react';
+import { Field, reduxForm } from 'redux-form';
 import {
   combineValidators,
-  composeValidators,
   matchesField,
-  isRequired
-} from "revalidate";
+  isRequired,
+  composeValidators
+} from 'revalidate';
+import TextInput from '../../../app/common/form/TextInput';
 
 const validate = combineValidators({
-  newPassword1: isRequired({ message: "Please entern a password" }),
+  newPassword1: isRequired({ message: 'Please enter a password' }),
   newPassword2: composeValidators(
-    isRequired({ message: "Please confirm your new password" }),
-    matchesField("newPassword1")({ message: "Password do not match" })
+    isRequired({ message: 'Please confirm your new password' }),
+    matchesField('newPassword1')({ message: 'Passwords do not match' })
   )()
 });
 
@@ -37,7 +37,7 @@ const AccountPage = ({
     <Segment>
       <Header dividing size="large" content="Account" />
       {providerId &&
-        providerId === "password" && (
+        providerId === 'password' && (
           <div>
             <Header color="teal" sub content="Change password" />
             <p>Use this form to update your account settings</p>
@@ -69,16 +69,17 @@ const AccountPage = ({
               )}
               <Divider />
               <Button
-                size="large"
                 disabled={invalid || submitting}
+                size="large"
                 positive
                 content="Update Password"
               />
             </Form>
           </div>
         )}
+
       {providerId &&
-        providerId === "facebook.com" && (
+        providerId === 'facebook.com' && (
           <div>
             <Header color="teal" sub content="Facebook Account" />
             <p>Please visit Facebook to update your account settings</p>
@@ -88,8 +89,9 @@ const AccountPage = ({
             </Button>
           </div>
         )}
+
       {providerId &&
-        providerId === "google.com" && (
+        providerId === 'google.com' && (
           <div>
             <Header color="teal" sub content="Google Account" />
             <p>Please visit Google to update your account settings</p>
@@ -103,4 +105,4 @@ const AccountPage = ({
   );
 };
 
-export default reduxForm({ form: "account", validate })(AccountPage);
+export default reduxForm({ form: 'account', validate })(AccountPage);

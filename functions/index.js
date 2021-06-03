@@ -1,5 +1,5 @@
-const functions = require("firebase-functions");
-const admin = require("firebase-admin");
+const functions = require('firebase-functions');
+const admin = require('firebase-admin');
 admin.initializeApp(functions.config().firebase);
 
 const newActivity = (type, event, id) => {
@@ -15,74 +15,65 @@ const newActivity = (type, event, id) => {
   };
 };
 
-exports.createActivity = functions.firestore
-  .document("events/{eventId}")
-  .onCreate(event => {
-    let newEvent = event.data();
-    console.log(newEvent);
+exports.createActivity = functions.firestore.document('events/{eventId}').onCreate(event => {
+  let newEvent = event.data();
 
-    const activity = newActivity("newEvent", newEvent, event.id);
-    console.log(activity);
+  console.log(newEvent);
 
-    return admin
-      .firestore()
-      .collection("activity")
-      .add(activity)
-      .then(docRef => {
-        return console.log("Activity created with id: ", docRef.id);
-      })
-      .catch(err => {
-        return console.log("Error adding activity", err);
-      });
-  });
+  const activity = newActivity('newEvent', newEvent, event.id);
 
-exports.cancelActivity = functions.firestore
-  .document("events/{eventId}")
-  .onUpdate((event, context) => {
-    let updatedEvent = event.after.data();
-    let previousEventData = event.before.data();
-    console.log({ event });
-    console.log({ context });
-    console.log({ updatedEvent });
-    console.log({ previousEventData });
+  console.log(activity);
 
-    if (
-      !updatedEvent.cancelled ||
-      updatedEvent.cancelled === previousEventData.cancelled
-    ) {
-      return false;
-    }
+  return admin
+    .firestore()
+    .collection('activity')
+    .add(activity)
+    .then(docRef => {
+      return console.log('Activity created with id: ', docRef.id);
+    })
+    .catch(err => {
+      return console.log('Error adding activity', err);
+    });
+});
 
-    const activity = newActivity(
-      "cancelledEvent",
-      updatedEvent,
-      context.params.eventId
-    );
+exports.cancelActivity = functions.firestore.document('events/{eventId}').onUpdate((event, context) => {
+  let updatedEvent = event.after.data();
+  let previousEventData = event.before.data();
+  console.log({ event });
+  console.log({ context });
+  console.log({ updatedEvent });
+  console.log({ previousEventData });
 
-    console.log({ activity });
+  if (!updatedEvent.cancelled || updatedEvent.cancelled === previousEventData.cancelled) {
+    return false;
+  }
 
-    return admin
-      .firestore()
-      .collection("activity")
-      .add(activity)
-      .then(docRef => {
-        return console.log("Activity created with id: ", docRef.id);
-      })
-      .catch(err => {
-        return console.log("Error adding activity", err);
-      });
-  });
+  const activity = newActivity('cancelledEvent', updatedEvent, context.params.eventId);
+
+  console.log({ activity });
+
+  return admin
+    .firestore()
+    .collection('activity')
+    .add(activity)
+    .then(docRef => {
+      return console.log('Activity created with id: ', docRef.id);
+    })
+    .catch(err => {
+      return console.log('Error adding activity', err);
+    });
+});
 
 exports.userFollowing = functions.firestore
-  .document("users/{followerUid}/following/{followingUid}")
+  .document('users/{followerUid}/following/{followingUid}')
   .onCreate((event, context) => {
-    console.log("v1");
+    console.log('v1');
     const followerUid = context.params.followerUid;
     const followingUid = context.params.followingUid;
 
     const followerDoc = admin
       .firestore()
-      .collection("users")
+      .collection('users')
       .doc(followerUid);
 
     console.log(followerDoc);
@@ -92,30 +83,31 @@ exports.userFollowing = functions.firestore
       console.log({ userData });
       let follower = {
         displayName: userData.displayName,
-        photoURL: userData.photoURL || "/assets/user.png",
-        city: userData.city || "unknown city"
+        photoURL: userData.photoURL || '/assets/user.png',
+        city: userData.city || 'unknown city'
       };
       return admin
         .firestore()
-        .collection("users")
+        .collection('users')
         .doc(followingUid)
-        .collection("followers")
+        .collection('followers')
         .doc(followerUid)
         .set(follower);
     });
   });
+
 exports.unfollowUser = functions.firestore
-  .document("users/{followerUid}/following/{followingUid}")
+  .document('users/{followerUid}/following/{followingUid}')
   .onDelete((event, context) => {
     return admin
       .firestore()
-      .collection("users")
+      .collection('users')
       .doc(context.params.followingUid)
-      .collection("followers")
+      .collection('followers')
       .doc(context.params.followerUid)
       .delete()
       .then(() => {
-        return console.log("doc deleted");
+        return console.log('doc deleted');
       })
       .catch(err => {
         return console.log(err);

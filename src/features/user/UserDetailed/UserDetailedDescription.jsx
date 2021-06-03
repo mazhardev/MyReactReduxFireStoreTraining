@@ -8,10 +8,10 @@ const UserDetailedDescription = ({ profile }) => {
     createdAt = format(profile.createdAt.toDate(), 'D MMM YYYY');
   }
   return (
-    <Grid.Column width={12}>
+    <Grid.Column mobile={16} tablet={16} computer={12}>
       <Segment>
-        <Grid columns={2}>
-          <Grid.Column width={10}>
+        <Grid mobile={16} tablet={16} computer={2}>
+          <Grid.Column mobile={16} tablet={16} computer={10}>
             <Header icon="smile" content="About Display Name" />
             <p>
               I am a: <strong>{profile.occupation || 'tbn'}</strong>
@@ -24,7 +24,7 @@ const UserDetailedDescription = ({ profile }) => {
             </p>
             <p>{profile.description}</p>
           </Grid.Column>
-          <Grid.Column width={6}>
+          <Grid.Column mobile={16} tablet={16} computer={6}>
             <Header icon="heart outline" content="Interests" />
             {profile.interests ?
             <List>

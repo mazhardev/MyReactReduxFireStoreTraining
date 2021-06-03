@@ -20,17 +20,20 @@ body {
 
 /*home page styles*/
 
+
 .masthead {
+  
+/* background: linear-gradient(to right, #F0CB35, #C02425); */
   background-image: linear-gradient(
           135deg,
-          rgb(24, 42, 115) 0%,
-          rgb(33, 138, 174) 69%,
-          rgb(32, 167, 172) 89%
+          rgb(245, 26, 6) 0%,
+          rgb(14, 52, 221) 69%,
+          rgb(167, 170, 14) 89%
   ) !important;
 }
 
 .masthead.segment {
-  min-height: 800px;
+  min-height: 1000px;
   padding: 1em 0 !important;
 }
 
@@ -58,6 +61,38 @@ body {
 .secondary.inverted.pointing.menu {
   border: none;
 }
+@media screen and (max-width:643px) {
+  .masthead.segment {
+    min-height: 700px;
+    padding: 1em 0 !important;
+  }
+  
+  .masthead .ui.menu .ui.button,
+  .ui.menu a.ui.inverted.button {
+    margin-left: 0.5em;
+  }
+  
+  .masthead h1.ui.header {
+    margin-top: 1em;
+    margin-bottom: 0;
+    font-size: 2em;
+    font-weight: normal;
+  }
+  
+  .masthead h2 {
+    font-size: 1.1em;
+    font-weight: normal;
+  }
+  
+  .footer.segment {
+    padding: 2em 0;
+  }
+  
+  .secondary.inverted.pointing.menu {
+    border: none;
+  }
+  
+}
 
 /*end home page styles*/
 
@@ -70,9 +105,9 @@ body {
 .ui.fixed.menu {
   background-image: linear-gradient(
           135deg,
-          rgb(24, 42, 115) 0%,
-          rgb(33, 138, 174) 69%,
-          rgb(32, 167, 172) 89%
+          rgb(245, 26, 6) 0%,
+          rgb(14, 52, 221) 69%,
+          rgb(167, 170, 14) 89%
   ) !important;
 }
 
