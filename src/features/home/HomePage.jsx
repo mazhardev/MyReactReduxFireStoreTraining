@@ -6,11 +6,11 @@ const HomePage = ({history}) => {
       <div className="ui inverted vertical masthead center aligned segment">
         <div className="ui text container">
           <h1 className="ui inverted stackable header">
-            <img
+            {/* <img
               className="ui image massive"
-              src="/assets/logo.png"
+              src="/assets/logo2.PNG"
               alt="logo"
-            />
+            /> */}
             <div className="content">Daily Social Events</div>
           </h1>
           <h2>Join the Community where Events is made fun</h2>

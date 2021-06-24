@@ -38,7 +38,7 @@ class NavMenu extends Component {
       <React.Fragment>
         <Menu fixed="top" inverted>
           <Menu.Item as={Link} to="/" header>
-            <img src="/assets/logo.png" alt="logo" />
+            {/* <img src="/assets/logo2.png" alt="logo" /> */}
             Social Events
           </Menu.Item>
           <Menu.Item as={NavLink} to="/events" name="Events" />
