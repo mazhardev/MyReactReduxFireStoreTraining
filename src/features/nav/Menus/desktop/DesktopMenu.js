@@ -32,10 +32,10 @@ class NavMenu extends Component {
   };
 
   render() {
-    const { auth, profile, children } = this.props;
+    const { auth, profile, children, Media } = this.props;
     const authenticated = auth.isLoaded && !auth.isEmpty
     return (
-      <React.Fragment>
+      <Media greaterThan="mobile">
         <Menu fixed="top" inverted>
           <Menu.Item as={Link} to="/" header>
             {/* <img src="/assets/logo2.png" alt="logo" /> */}
@@ -63,7 +63,7 @@ class NavMenu extends Component {
           )}
         </Menu>
         {children}
-      </React.Fragment>
+      </Media>
     );
   }
 }
